@@ -1,11 +1,13 @@
 package service
 
 import (
+	"log"
 	"net/http"
 
+	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/labstack/echo/v4"
 	"main.go/internal/model/survey"
-	// . "main.go/pkg/s3storage"
+	. "main.go/pkg/s3storage"
 )
 
 func (s *Service) InsertCandidate(c echo.Context) error {
@@ -33,38 +35,45 @@ func (s *Service) SelectInterview(c echo.Context) error {
 	return c.JSON(http.StatusOK, res)
 }
 
-// func (s *Service) UploadFile(c echo.Context) error {
+func (s *Service) UploadFile(c echo.Context) error {
+	sess, err := CreateSession()
+	surveyRepo := survey.NewRepo(s.Db)
+	if err != nil {
+		log.Fatal("Failed to create session:", err)
+	}
 
-// 	sess, err := СreateSession()
-// 	if err != nil {
-// 		log.Fatal("Failed to create session:", err)
-// 	}
+	svc := s3.New(sess)
 
-// 	svc := s3.New(sess)
+	file, err := c.FormFile("file")
+	if err != nil {
+		log.Fatal("Failed to open file:", err)
+	}
+	src, err := file.Open()
+	if err != nil {
+		return err
+	}
+	defer src.Close()
 
-// 	file, err := c.FormFile("file")
-// 	if err != nil {
-// 		log.Fatal("Failed to open file:", err)
-// 	}
-// 	src, err := file.Open()
-// 	if err != nil {
-// 		return err
-// 	}
-// 	defer src.Close()
-// 	dst, err := os.Create(file.Filename)
-// 	if err != nil {
-// 		return err
-// 	}
-// 	defer dst.Close()
+	fileName := file.Filename
+	size := file.Size
 
-// 	buffer, contentType := ReadFile(dst)
+	buffer := make([]byte, size)
+	_, err = src.Read(buffer)
+	if err != nil {
+		log.Fatal("Failed to read file:", err)
+	}
 
-// 	err = UploadToS3(svc, buffer, contentType)
-// 	if err != nil {
-// 		log.Fatal("Failed to upload file to S3:", err)
-// 	}
+	contentType := http.DetectContentType(buffer)
 
-// 	res, err :=
+	err = UploadToS3(svc, buffer, fileName, contentType)
+	if err != nil {
+		log.Fatal("Failed to upload file to S3:", err)
+	}
 
-// 	return c.JSON(http.StatusOK, res)
-// }
+	err = surveyRepo.SaveVideo(c.Request().Context(), fileName)
+	if err != nil {
+		log.Println("Failed to save video in DB:", err)
+	}
+
+	return c.JSON(http.StatusOK, map[string]string{"message": "File uploaded successfully"})
+}

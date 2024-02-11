@@ -66,8 +66,15 @@ func (r *repo) GetInterviewQuestion(ctx context.Context, nameInterview string) (
 	return &interview, nil
 }
 
-// func (r *repo) SaveVideo(ctx context.Context, filePath string) {
-// 	query = `
-// 			INSERT
-// 	`
-// }
+func (r *repo) SaveVideo(ctx context.Context, filePath string) error {
+	query := `
+		INSERT INTO videos (file_path) VALUES ($1)
+	`
+	_, err := r.db.ExecContext(ctx, query, filePath)
+	if err != nil {
+		log.Println("Failed to save video:", err)
+		return err
+	}
+
+	return nil
+}

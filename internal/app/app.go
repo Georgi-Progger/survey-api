@@ -2,6 +2,7 @@ package app
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
 	"os"
 
@@ -52,7 +53,13 @@ func ConnectDatabase() (*sql.DB, error) {
 	if err := godotenv.Load(); err != nil {
 		panic("No .env file found")
 	}
-	cfg.Db.DbConnect = os.Getenv("DB_CONNECT")
+
+	dbHost := os.Getenv("DB_HOST")
+	dbPort := os.Getenv("DB_PORT")
+	dbUser := os.Getenv("DB_USER")
+	dbPassword := os.Getenv("DB_PASSWORD")
+	dbName := os.Getenv("DB_NAME")
+	cfg.Db.DbConnect = fmt.Sprintf("postgresql://%s:%s@%s:%s/%s", dbUser, dbPassword, dbHost, dbPort, dbName)
 	db, err := sql.Open("postgres", cfg.Db.DbConnect)
 	if err != nil {
 		log.Panic("no connect to database...")
@@ -74,7 +81,8 @@ func NewRouter(s *service.Service) *echo.Echo {
 	candidateGroup := router.Group("/candidate")
 
 	candidateGroup.POST("/create", s.InsertCandidate)
-	candidateGroup.GET("/interview", s.SelectInterview)
+	candidateGroup.GET("/questions", s.SelectInterview)
+	candidateGroup.POST("/save/video", s.UploadFile)
 
 	return router
 }

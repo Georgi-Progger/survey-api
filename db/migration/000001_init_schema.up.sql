@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS "candidates" (
     date_of_birth DATE,
     city VARCHAR(50),
     education VARCHAR(255),
-    reason_dismissal INTEGER,
+    reason_dismissal TEXT,
     email VARCHAR(255),
     phone VARCHAR(50),
     year_work_experience INTEGER,

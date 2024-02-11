@@ -3,18 +3,13 @@ package survey
 type experience uint
 
 const (
-	LessThanAYear experience = iota
+	Not experience = iota
+	LessThanAYear
 	OneYear
 	TwoYear
+	ThreeYear
+	FourYear
 	MoreThanAYear
-)
-
-type reasonDismissal uint
-
-const (
-	YourWish reasonDismissal = iota
-	Dismissal
-	NegativeGroup
 )
 
 type (
@@ -26,7 +21,7 @@ type (
 		BirthDate          string
 		City               string
 		Education          string
-		ReasonDismissal    reasonDismissal
+		ReasonDismissal    string
 		Email              string
 		PhoneNumper        string
 		YearWorkExperience experience
@@ -55,5 +50,9 @@ type (
 		Id              uint
 		TextQuestion    string
 		ProblemsThemeId ProblemsTheme
+	}
+	File struct {
+		Id   uint
+		Path string
 	}
 )
