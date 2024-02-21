@@ -17,7 +17,7 @@ func (s *Service) InsertCandidate(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid JSON"})
 	}
 
-	surveyRepo := survey.NewRepo(s.Db)
+	surveyRepo := survey.NewRepository(s.Db)
 	if err := surveyRepo.NewCandidates(c.Request().Context(), candidate); err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Failed to insert candidate"})
 	}
@@ -28,7 +28,7 @@ func (s *Service) InsertCandidate(c echo.Context) error {
 func (s *Service) SelectInterview(c echo.Context) error {
 	name := c.FormValue("nameInterview")
 
-	surveyRepo := survey.NewRepo(s.Db)
+	surveyRepo := survey.NewRepository(s.Db)
 	res, err := surveyRepo.GetInterviewQuestion(c.Request().Context(), name)
 	if err != nil {
 		return c.String(http.StatusInternalServerError, err.Error())
@@ -38,7 +38,7 @@ func (s *Service) SelectInterview(c echo.Context) error {
 
 func (s *Service) UploadFile(c echo.Context) error {
 	sess, err := CreateSession()
-	surveyRepo := survey.NewRepo(s.Db)
+	surveyRepo := survey.NewRepository(s.Db)
 	if err != nil {
 		log.Fatal("Failed to create session:", err)
 	}
