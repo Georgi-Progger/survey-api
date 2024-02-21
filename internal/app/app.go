@@ -6,10 +6,10 @@ import (
 	"log"
 	"os"
 
+	"github.com/Georgi-Progger/survey-api/internal/service"
 	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
-	"main.go/internal/service"
 
 	_ "github.com/lib/pq"
 )
