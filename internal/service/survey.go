@@ -4,7 +4,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/Georgi-Progger/survey-api/internal/model/survey"
+	survey "github.com/Georgi-Progger/survey-api/internal/model"
 	. "github.com/Georgi-Progger/survey-api/pkg/s3storage"
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/labstack/echo/v4"
