@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/Georgi-Progger/survey-api/internal/app"
 	"github.com/joho/godotenv"
-	"main.go/internal/app"
 )
 
 func main() {

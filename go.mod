@@ -1,4 +1,4 @@
-module main.go
+module github.com/Georgi-Progger/survey-api
 
 go 1.20
 
