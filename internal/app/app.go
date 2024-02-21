@@ -6,11 +6,11 @@ import (
 	"log"
 	"os"
 
+	"github.com/Georgi-Progger/survey-api/internal/handler"
+	"github.com/Georgi-Progger/survey-api/internal/repository"
 	"github.com/Georgi-Progger/survey-api/internal/service"
 	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
-	"github.com/labstack/echo/v4/middleware"
-
 	_ "github.com/lib/pq"
 )
 
@@ -40,11 +40,13 @@ func NewApplication(cfg *Config) (*App, error) {
 	if err != nil {
 		log.Panic("connectionString error..")
 	}
-	surveyService := service.NewService(db)
+	repo := repository.NewRepository(db)
+	surveyService := service.NewService(repo)
+	handler := handler.NewHandler(surveyService)
 	return &App{
 		Service: surveyService,
 		config:  cfg,
-		Echo:    NewRouter(surveyService),
+		Echo:    handler.InitRoutes(),
 	}, nil
 }
 
@@ -71,18 +73,4 @@ func ConnectDatabase() (*sql.DB, error) {
 		log.Panic(err)
 	}
 	return db, nil
-}
-
-func NewRouter(s *service.Service) *echo.Echo {
-	router := echo.New()
-
-	router.Use(middleware.Logger())
-
-	candidateGroup := router.Group("/candidate")
-
-	candidateGroup.POST("/create", s.InsertCandidate)
-	candidateGroup.GET("/questions", s.SelectInterview)
-	candidateGroup.POST("/save/video", s.UploadFile)
-
-	return router
 }

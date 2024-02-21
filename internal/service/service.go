@@ -1,13 +1,34 @@
 package service
 
-import "database/sql"
+import (
+	"context"
 
-type Service struct {
-	Db *sql.DB
+	model "github.com/Georgi-Progger/survey-api/internal/model"
+	"github.com/Georgi-Progger/survey-api/internal/repository"
+)
+
+type Candidate interface {
+	Create(ctx context.Context, candidate model.Candidate) error
 }
 
-func NewService(db *sql.DB) *Service {
+type Interview interface {
+	GetInterviewQuestion(ctx context.Context, nameInterview string) (*model.Interview, error)
+}
+
+type Video interface {
+	Save(ctx context.Context, filePath string) error
+}
+
+type Service struct {
+	Candidate
+	Interview
+	Video
+}
+
+func NewService(repo *repository.Repository) *Service {
 	return &Service{
-		Db: db,
+		Candidate: NewCandidateService(repo.Candidate),
+		Interview: NewInterviewService(repo.Interview),
+		Video:     NewVideoService(repo.Video),
 	}
 }
