@@ -1,4 +1,4 @@
-package survey
+package repository
 
 import (
 	"context"
@@ -8,17 +8,29 @@ import (
 	model "github.com/Georgi-Progger/survey-api/internal/model"
 )
 
-type repo struct {
+type Candidate interface {
+	Create(ctx context.Context, candidate model.Candidate) error
+}
+
+type Interview interface {
+	GetInterviewQuestion(ctx context.Context, nameInterview string) (*model.Interview, error)
+}
+
+type Video interface {
+	Save(ctx context.Context, filePath string) error
+}
+
+type Repository struct {
 	db *sql.DB
 }
 
-func NewRepo(db *sql.DB) *repo {
-	return &repo{
+func NewRepo(db *sql.DB) *Repository {
+	return &Repository{
 		db: db,
 	}
 }
 
-func (r *repo) NewCandidates(ctx context.Context, candidate model.Candidate) error {
+func (r *Repository) NewCandidates(ctx context.Context, candidate model.Candidate) error {
 	query := `
       INSERT INTO candidates (first_name, last_name, 
         middle_name, date_of_birth, city, education, reason_dismissal,
@@ -37,7 +49,7 @@ func (r *repo) NewCandidates(ctx context.Context, candidate model.Candidate) err
 	return nil
 }
 
-func (r *repo) GetInterviewQuestion(ctx context.Context, nameInterview string) (*model.Interview, error) {
+func (r *Repository) GetInterviewQuestion(ctx context.Context, nameInterview string) (*model.Interview, error) {
 	query := `
 		SELECT i.id, i.interview_name, iq.id, iq.text_answer
 		FROM interviews i
@@ -68,7 +80,7 @@ func (r *repo) GetInterviewQuestion(ctx context.Context, nameInterview string) (
 	return &interview, nil
 }
 
-func (r *repo) SaveVideo(ctx context.Context, filePath string) error {
+func (r *Repository) SaveVideo(ctx context.Context, filePath string) error {
 	query := `
 		INSERT INTO videos (file_path) VALUES ($1)
 	`
