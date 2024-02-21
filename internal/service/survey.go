@@ -4,14 +4,15 @@ import (
 	"log"
 	"net/http"
 
-	survey "github.com/Georgi-Progger/survey-api/internal/model"
+	model "github.com/Georgi-Progger/survey-api/internal/model"
+	survey "github.com/Georgi-Progger/survey-api/internal/repository"
 	. "github.com/Georgi-Progger/survey-api/pkg/s3storage"
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/labstack/echo/v4"
 )
 
 func (s *Service) InsertCandidate(c echo.Context) error {
-	var candidate survey.Candidate
+	var candidate model.Candidate
 	if err := c.Bind(&candidate); err != nil {
 		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid JSON"})
 	}

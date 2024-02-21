@@ -4,6 +4,8 @@ import (
 	"context"
 	"database/sql"
 	"log"
+
+	model "github.com/Georgi-Progger/survey-api/internal/model"
 )
 
 type repo struct {
@@ -16,7 +18,7 @@ func NewRepo(db *sql.DB) *repo {
 	}
 }
 
-func (r *repo) NewCandidates(ctx context.Context, candidate Candidate) error {
+func (r *repo) NewCandidates(ctx context.Context, candidate model.Candidate) error {
 	query := `
       INSERT INTO candidates (first_name, last_name, 
         middle_name, date_of_birth, city, education, reason_dismissal,
@@ -35,15 +37,15 @@ func (r *repo) NewCandidates(ctx context.Context, candidate Candidate) error {
 	return nil
 }
 
-func (r *repo) GetInterviewQuestion(ctx context.Context, nameInterview string) (*Interview, error) {
+func (r *repo) GetInterviewQuestion(ctx context.Context, nameInterview string) (*model.Interview, error) {
 	query := `
 		SELECT i.id, i.interview_name, iq.id, iq.text_answer
 		FROM interviews i
 		JOIN interview_questions iq ON i.id = iq.interview_id
 		WHERE i.interview_name = $1;
 	`
-	var interview Interview
-	var question InterviewQuestion
+	var interview model.Interview
+	var question model.InterviewQuestion
 
 	rows, err := r.db.QueryContext(ctx, query, nameInterview)
 	if err != nil {
