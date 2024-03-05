@@ -19,10 +19,15 @@ type Video interface {
 	Save(ctx context.Context, filePath string) error
 }
 
+type Sender interface {
+	Send(destination, message string) bool
+}
+
 type Service struct {
 	Candidate
 	Interview
 	Video
+	Sender
 }
 
 func NewService(repo *repository.Repository) *Service {
@@ -30,5 +35,6 @@ func NewService(repo *repository.Repository) *Service {
 		Candidate: NewCandidateService(repo.Candidate),
 		Interview: NewInterviewService(repo.Interview),
 		Video:     NewVideoService(repo.Video),
+		Sender:    NewSmsSenderService(),
 	}
 }
