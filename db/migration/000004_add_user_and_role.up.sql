@@ -1,13 +1,15 @@
 CREATE TABLE IF NOT EXISTS roles (
     id SERIAL PRIMARY KEY,
-    name VARCHAR(255)
+    name VARCHAR(255) UNIQUE
 );
+
+INSERT INTO roles(name) VALUES('candidate');
 
 CREATE TABLE IF NOT EXISTS users (
     id SERIAL PRIMARY KEY,
     role_id INTEGER,
-    phonenumber VARCHAR(12),
-    email VARCHAR(255),
+    phonenumber VARCHAR(12) UNIQUE,
+    email VARCHAR(255) UNIQUE,
     password VARCHAR(255),
-    FOREIGN KEY (role_id) REFERENCES role(id) ON DELETE CASCADE 
+    FOREIGN KEY (role_id) REFERENCES roles(id) ON DELETE CASCADE 
 );
