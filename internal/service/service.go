@@ -24,7 +24,7 @@ type User interface {
 }
 
 type Sender interface {
-	Send(destination, message string) bool
+	Send(destination, message string) error
 }
 
 type Role interface {

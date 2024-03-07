@@ -16,7 +16,7 @@ func NewUserRepository(db *sql.DB) *UserRepository {
 }
 
 func (r *UserRepository) Save(ctx context.Context, user model.User) (int, error) {
-	query := "INSERT INTO users(role_id, phonenumber, email, password) VALUES($1, $2, $3, $4);"
+	query := "INSERT INTO users(role_id, phonenumber, email, password) VALUES($1, $2, $3, $4) RETURNING id;"
 	id := 0
 	rows := r.db.QueryRowContext(ctx, query, user.RoleId, user.Phonenumber, user.Email, user.Password)
 	if err := rows.Scan(&id); err != nil {

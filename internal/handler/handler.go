@@ -24,6 +24,7 @@ func (h *Handler) InitRoutes() *echo.Echo {
 	candidateGroup.POST("/create", h.InsertCandidate)
 	candidateGroup.GET("/questions", h.SelectInterview)
 	candidateGroup.POST("/save/video", h.UploadFile)
+	candidateGroup.POST("/registration", h.RegistrCandidate)
 
 	return router
 }

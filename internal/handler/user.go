@@ -10,11 +10,15 @@ import (
 )
 
 func (h *Handler) RegistrCandidate(c echo.Context) error {
-	user := model.User{}
+	user := model.User{RoleId: 1}
 	if err := c.Bind(&user); err != nil {
 		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid JSON"})
 	}
-	res, err := password.Generate(10, 10, 10, false, false)
+	res, err := password.Generate(6, 6, 0, false, true)
+	if err != nil {
+		return c.String(http.StatusInternalServerError, err.Error())
+	}
+	err = h.services.Sender.Send(user.Phonenumber, res)
 	if err != nil {
 		return c.String(http.StatusInternalServerError, err.Error())
 	}
@@ -23,9 +27,9 @@ func (h *Handler) RegistrCandidate(c echo.Context) error {
 		return c.String(http.StatusInternalServerError, err.Error())
 	}
 	user.Password = string(passwordHash)
-	h.services.User.Save(c.Request().Context(), user)
+	id, err := h.services.User.Save(c.Request().Context(), user)
 	if err != nil {
 		return c.String(http.StatusInternalServerError, err.Error())
 	}
-	return c.JSON(http.StatusCreated, map[string]string{"message": "Candidate successfully created"})
+	return c.JSON(http.StatusCreated, map[string]int{"id": id})
 }
