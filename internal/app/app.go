@@ -61,8 +61,9 @@ func ConnectDatabase() (*sql.DB, error) {
 	dbUser := os.Getenv("DB_USER")
 	dbPassword := os.Getenv("DB_PASSWORD")
 	dbName := os.Getenv("DB_NAME")
+	dbSSL := os.Getenv("DB_SSLMODE")
 	cfg.Db.DbConnect = fmt.Sprintf("postgresql://%s:%s@%s:%s/%s", dbUser, dbPassword, dbHost, dbPort, dbName)
-	db, err := sql.Open("postgres", cfg.Db.DbConnect)
+	db, err := sql.Open("postgres", fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=%s", dbHost, dbPort, dbUser, dbPassword, dbName, dbSSL))
 	if err != nil {
 		log.Panic("no connect to database...")
 	}
