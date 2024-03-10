@@ -27,3 +27,11 @@ func (r *UserRepository) Save(ctx context.Context, user model.User) (int, error)
 	}
 	return id, nil
 }
+
+func (r *UserRepository) GetUserByPhonenumber(phonenumber string) (model.User, error) {
+	query := "SELECT * FROM users WHERE phonenumber=$1;"
+	rows := r.db.QueryRow(query, phonenumber)
+	user := model.User{}
+	err := rows.Scan(&user.Id, &user.RoleId, &user.Phonenumber, &user.Email, &user.Password)
+	return user, err
+}

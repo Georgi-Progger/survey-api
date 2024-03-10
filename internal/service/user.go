@@ -18,3 +18,7 @@ func NewUserService(repo repository.User) *UserService {
 func (s *UserService) Save(ctx context.Context, user model.User) (int, error) {
 	return s.repo.Save(ctx, user)
 }
+
+func (s *UserService) GetUserByPhonenumber(phonenumber string) (model.User, error) {
+	return s.repo.GetUserByPhonenumber(phonenumber)
+}
