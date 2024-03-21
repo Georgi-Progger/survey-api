@@ -1,0 +1,94 @@
+basePath: /
+definitions:
+  handler.userAuthDTO:
+    properties:
+      password:
+        type: string
+      phonenumber:
+        type: string
+    type: object
+  handler.userRegDTO:
+    properties:
+      phonenumber:
+        type: string
+    type: object
+host: localhost:8091
+info:
+  contact: {}
+  description: API Server for films and actors
+  title: Filmlib API
+  version: "1.0"
+paths:
+  /candidate/auth:
+    post:
+      consumes:
+      - application/json
+      description: login
+      operationId: login
+      parameters:
+      - description: credentials
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/handler.userAuthDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: jwt
+          schema:
+            type: string
+        "400":
+          description: Failed to decode request body. Invalid JSON
+          schema: {}
+        "500":
+          description: Failed to generate JWT
+          schema: {}
+      summary: SignIn
+      tags:
+      - Auth
+  /candidate/registration:
+    post:
+      consumes:
+      - application/json
+      description: create account
+      operationId: create-account
+      parameters:
+      - description: account info
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/handler.userRegDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: integer
+        "400":
+          description: Bad Request
+          schema: {}
+        "404":
+          description: Not Found
+          schema: {}
+        "500":
+          description: Internal Server Error
+          schema: {}
+        default:
+          description: ""
+          schema: {}
+      summary: Registration
+      tags:
+      - Auth
+schemes:
+- https
+- http
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
