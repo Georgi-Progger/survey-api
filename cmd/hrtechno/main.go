@@ -8,6 +8,16 @@ import (
 	"github.com/joho/godotenv"
 )
 
+// @title Filmlib API
+// @version 1.0
+// @description API Server for films and actors
+
+// @host localhost:8091
+// @BasePath /
+// @schemes https http
+// @securityDefinitions.apikey ApiKeyAuth
+// @in header
+// @name Authorization
 func main() {
 	cfg := app.Config{}
 	if err := godotenv.Load(); err != nil {

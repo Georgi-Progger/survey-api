@@ -11,9 +11,29 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+type userAuthDTO struct {
+	Phonenumber string `json:"phonenumber"`
+	Password    string `json:"password"`
+}
+type userRegDTO struct {
+	Phonenumber string `json:"phonenumber"`
+}
+
+// @Summary Registration
+// @Tags Auth
+// @Description create account
+// @ID create-account
+// @Accept  json
+// @Produce  json
+// @Param input body userRegDTO true "account info"
+// @Success 200 {integer} integer 1
+// @Failure 400,404 {object} error
+// @Failure 500 {object} error
+// @Failure default {object} error
+// @Router /candidate/registration [post]
 func (h *Handler) RegistrCandidate(c echo.Context) error {
-	user := model.User{RoleId: 1}
-	if err := c.Bind(&user); err != nil {
+	userInfo := userRegDTO{}
+	if err := c.Bind(&userInfo); err != nil {
 		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid JSON"})
 	}
 	res, err := password.Generate(6, 6, 0, false, true)
@@ -21,7 +41,7 @@ func (h *Handler) RegistrCandidate(c echo.Context) error {
 		return c.String(http.StatusInternalServerError, err.Error())
 	}
 	fmt.Println(res)
-	err = h.services.Sender.Send(user.Phonenumber, res)
+	err = h.services.Sender.Send(userInfo.Phonenumber, res)
 	if err != nil {
 		return c.String(http.StatusInternalServerError, err.Error())
 	}
@@ -29,7 +49,12 @@ func (h *Handler) RegistrCandidate(c echo.Context) error {
 	if err != nil {
 		return c.String(http.StatusInternalServerError, err.Error())
 	}
-	user.Password = string(passwordHash)
+	user := model.User{
+		Phonenumber: userInfo.Phonenumber,
+		Password:    string(passwordHash),
+		RoleId:      1,
+	}
+
 	id, err := h.services.User.Save(c.Request().Context(), user)
 	if err != nil {
 		return c.String(http.StatusInternalServerError, err.Error())
@@ -37,8 +62,19 @@ func (h *Handler) RegistrCandidate(c echo.Context) error {
 	return c.JSON(http.StatusCreated, map[string]int{"id": id})
 }
 
+// @Summary SignIn
+// @Tags Auth
+// @Description login
+// @ID login
+// @Accept  json
+// @Produce  json
+// @Param input body userAuthDTO true "credentials"
+// @Success 200 {string} map[string]string "jwt"
+// @Failure 400 {object} error "Failed to decode request body. Invalid JSON"
+// @Failure 500 {object} error "Failed to generate JWT"
+// @Router /candidate/auth [post]
 func (h *Handler) AuthUser(c echo.Context) error {
-	requestUser := model.User{}
+	requestUser := userAuthDTO{}
 	if err := c.Bind(&requestUser); err != nil {
 		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid JSON"})
 	}
