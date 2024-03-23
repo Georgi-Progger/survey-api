@@ -23,7 +23,7 @@ func (h *Handler) InitRoutes() *echo.Echo {
 
 	router.Use(middleware.Logger())
 	router.Use(middleware.CORSWithConfig(middleware.CORSConfig{
-		AllowOrigins: []string{"https://survey.skill-radar.ru", "http://localhost:8091"},
+		AllowOrigins: []string{"*"},
 		AllowMethods: []string{http.MethodGet, http.MethodPut, http.MethodPost, http.MethodDelete},
 	}))
 	router.GET("/swagger/*", echoSwagger.WrapHandler)
