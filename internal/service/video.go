@@ -14,6 +14,6 @@ func NewVideoService(repo repository.Video) *VideoService {
 	return &VideoService{repo: repo}
 }
 
-func (s *VideoService) Save(ctx context.Context, filePath string) error {
-	return s.repo.Save(ctx, filePath)
+func (s *VideoService) Save(ctx context.Context, vquestionId, userId int, filePath string) error {
+	return s.repo.Save(ctx, vquestionId,userId,filePath)
 }

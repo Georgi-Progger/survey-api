@@ -1,4 +1,4 @@
-package survey
+package model
 
 type User struct {
 	Id          int

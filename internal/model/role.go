@@ -1,4 +1,4 @@
-package survey
+package model
 
 type Role struct {
 	Id   int

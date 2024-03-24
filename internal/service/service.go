@@ -16,7 +16,7 @@ type Interview interface {
 }
 
 type Video interface {
-	Save(ctx context.Context, filePath string) error
+	Save(ctx context.Context, vquestionId, userId int, filePath string) error
 }
 
 type User interface {
@@ -32,6 +32,10 @@ type Role interface {
 	GetByName(ctx context.Context, name string) (*model.Role, error)
 }
 
+type VQuestion interface {
+	GetAll() ([]model.VQuestion, error)
+}
+
 type Service struct {
 	Candidate
 	Interview
@@ -39,6 +43,7 @@ type Service struct {
 	Sender
 	Role
 	User
+	VQuestion
 }
 
 func NewService(repo *repository.Repository) *Service {
@@ -49,5 +54,6 @@ func NewService(repo *repository.Repository) *Service {
 		Sender:    NewSmsSenderService(),
 		Role:      NewRoleService(repo.Role),
 		User:      NewUserService(repo.User),
+		VQuestion: NewVQuestionService(repo.VQuestion),
 	}
 }
