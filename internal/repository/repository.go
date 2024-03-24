@@ -25,7 +25,11 @@ type Interview interface {
 }
 
 type Video interface {
-	Save(ctx context.Context, filePath string) error
+	Save(ctx context.Context, vquestionId, userId int, filePath string) error
+}
+
+type VQuestion interface {
+	GetAll() ([]model.VQuestion, error)
 }
 
 type Repository struct {
@@ -34,6 +38,7 @@ type Repository struct {
 	Video
 	Role
 	User
+	VQuestion
 }
 
 func NewRepository(db *sql.DB) *Repository {
@@ -43,5 +48,6 @@ func NewRepository(db *sql.DB) *Repository {
 		Video:     NewVideoImpl(db),
 		Role:      NewRoleRepository(db),
 		User:      NewUserRepository(db),
+		VQuestion: NewVQuestionRepository(db),
 	}
 }

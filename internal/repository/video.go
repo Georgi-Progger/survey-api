@@ -14,11 +14,13 @@ func NewVideoImpl(db *sql.DB) *VideoImpl {
 	return &VideoImpl{db: db}
 }
 
-func (r *VideoImpl) Save(ctx context.Context, filePath string) error {
+func (r *VideoImpl) Save(ctx context.Context, vquestionId, userId int, filePath string) error {
 	query := `
-	INSERT INTO videos (file_path) VALUES ($1)
+	INSERT INTO question_answer(
+		video_question_id, user_id, video_path)
+		VALUES ($1, $2, $3);
 `
-	_, err := r.db.ExecContext(ctx, query, filePath)
+	_, err := r.db.ExecContext(ctx, query, vquestionId, userId, filePath)
 	if err != nil {
 		log.Println("Failed to save video:", err)
 		return err

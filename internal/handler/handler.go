@@ -32,9 +32,12 @@ func (h *Handler) InitRoutes() *echo.Echo {
 
 	candidateGroup.POST("/create", h.InsertCandidate)
 	candidateGroup.GET("/questions", h.SelectInterview)
-	candidateGroup.POST("/save/video", h.UploadFile)
 	candidateGroup.POST("/registration", h.RegistrCandidate)
 	candidateGroup.POST("/auth", h.AuthUser)
+
+	interviewGroup := router.Group("/interview")
+	interviewGroup.GET("/question", h.GetAllVQuestions)
+	interviewGroup.POST("/video", h.UploadFile)
 
 	return router
 }
