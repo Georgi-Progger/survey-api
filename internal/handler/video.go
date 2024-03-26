@@ -22,7 +22,7 @@ func (h *Handler) UploadFile(c echo.Context) error {
 	}
 	sess, err := CreateSession()
 	if err != nil {
-		log.Fatal("Failed to create session:", err)
+		log.Println("Failed to create session:", err)
 		return c.JSON(http.StatusInternalServerError, map[string]string{"err": "Failed to open file"})
 	}
 
@@ -30,7 +30,7 @@ func (h *Handler) UploadFile(c echo.Context) error {
 
 	file, err := c.FormFile("file")
 	if err != nil {
-		log.Fatal("Failed to open file:", err)
+		log.Println("Failed to open file:", err)
 		return c.JSON(http.StatusInternalServerError, map[string]string{"err": "Failed to open file"})
 	}
 	src, err := file.Open()
@@ -44,7 +44,7 @@ func (h *Handler) UploadFile(c echo.Context) error {
 	buffer := make([]byte, size)
 	_, err = src.Read(buffer)
 	if err != nil {
-		log.Fatal("Failed to read file:", err)
+		log.Println("Failed to read file:", err)
 		return c.JSON(http.StatusInternalServerError, map[string]string{"err": "Failed to read file"})
 	}
 
@@ -52,7 +52,7 @@ func (h *Handler) UploadFile(c echo.Context) error {
 
 	err = UploadToS3(svc, buffer, fileName, contentType)
 	if err != nil {
-		log.Fatal("Failed to upload file to S3:", err)
+		log.Println("Failed to upload file to S3:", err)
 		return c.JSON(http.StatusInternalServerError, map[string]string{"err": "Failed to upload file to S3"})
 	}
 
