@@ -5,6 +5,7 @@ import (
 
 	_ "github.com/Georgi-Progger/survey-api/docs"
 	"github.com/Georgi-Progger/survey-api/internal/service"
+	"github.com/Georgi-Progger/survey-api/pkg/jwt"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	echoSwagger "github.com/swaggo/echo-swagger"
@@ -28,16 +29,31 @@ func (h *Handler) InitRoutes() *echo.Echo {
 	}))
 	router.GET("/swagger/*", echoSwagger.WrapHandler)
 
-	candidateGroup := router.Group("/candidate")
+	loginFreeCandidateGroup := router.Group("/candidate")
 
+	loginFreeCandidateGroup.POST("/registration", h.RegistrCandidate)
+	loginFreeCandidateGroup.POST("/auth", h.AuthUser)
+
+	candidateGroup := loginFreeCandidateGroup.Group("")
+
+	candidateGroup.Use(candidateAuthMiddleware)
 	candidateGroup.POST("/create", h.InsertCandidate)
 	candidateGroup.GET("/questions", h.SelectInterview)
-	candidateGroup.POST("/registration", h.RegistrCandidate)
-	candidateGroup.POST("/auth", h.AuthUser)
 
 	interviewGroup := router.Group("/interview")
+	interviewGroup.Use(candidateAuthMiddleware)
 	interviewGroup.GET("/question", h.GetAllVQuestions)
 	interviewGroup.POST("/video", h.UploadFile)
 
 	return router
+}
+
+func candidateAuthMiddleware(next echo.HandlerFunc) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		err := jwt.ValidateCandidateRoleJWT(c)
+		if err != nil {
+			return c.JSON(401, map[string]string{"error": err.Error()})
+		}
+		return next(c)
+	}
 }

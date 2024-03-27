@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	model "github.com/Georgi-Progger/survey-api/internal/model"
-	"github.com/Georgi-Progger/survey-api/internal/util"
+	"github.com/Georgi-Progger/survey-api/pkg/jwt"
 	"github.com/labstack/echo/v4"
 	"github.com/sethvargo/go-password/password"
 	"golang.org/x/crypto/bcrypt"
@@ -82,7 +82,7 @@ func (h *Handler) AuthUser(c echo.Context) error {
 	if err != nil || checkPasswords(requestUser.Password, dbUser.Password) {
 		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid credentials"})
 	}
-	jwtStr, err := util.GenerateJWT(dbUser)
+	jwtStr, err := jwt.GenerateJWT(dbUser)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "InternalServerError"})
 	}
