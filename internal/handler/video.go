@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/Georgi-Progger/survey-api/pkg/jwt"
 	. "github.com/Georgi-Progger/survey-api/pkg/s3storage"
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/google/uuid"
@@ -16,10 +17,7 @@ func (h *Handler) UploadFile(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, map[string]string{"err": "Not all form values are set"})
 	}
-	userId, err := strconv.Atoi(c.FormValue("userId"))
-	if err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]string{"err": "Not all form values are set"})
-	}
+	userId := jwt.GetUserIdFromContext(c)
 	sess, err := CreateSession()
 	if err != nil {
 		log.Println("Failed to create session:", err)
