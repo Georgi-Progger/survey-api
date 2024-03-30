@@ -32,6 +32,11 @@ type VQuestion interface {
 	GetAll() ([]model.VQuestion, error)
 }
 
+type TQuestion interface {
+	GetAll() ([]model.TestQuestion, error)
+	InsertAnswers(userId int, answers []model.UserTestAnswer) error
+}
+
 type Repository struct {
 	Candidate
 	Interview
@@ -39,6 +44,7 @@ type Repository struct {
 	Role
 	User
 	VQuestion
+	TQuestion
 }
 
 func NewRepository(db *sql.DB) *Repository {
@@ -49,5 +55,6 @@ func NewRepository(db *sql.DB) *Repository {
 		Role:      NewRoleRepository(db),
 		User:      NewUserRepository(db),
 		VQuestion: NewVQuestionRepository(db),
+		TQuestion: NewTQuestionRepository(db),
 	}
 }

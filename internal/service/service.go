@@ -36,6 +36,12 @@ type VQuestion interface {
 	GetAll() ([]model.VQuestion, error)
 }
 
+type TQuestion interface {
+	GetAll() ([]model.TestQuestion, error)
+	InsertAnswers(userId int, answers []model.UserTestAnswer) error
+}
+
+
 type Service struct {
 	Candidate
 	Interview
@@ -44,6 +50,7 @@ type Service struct {
 	Role
 	User
 	VQuestion
+	TQuestion
 }
 
 func NewService(repo *repository.Repository) *Service {
@@ -55,5 +62,6 @@ func NewService(repo *repository.Repository) *Service {
 		Role:      NewRoleService(repo.Role),
 		User:      NewUserService(repo.User),
 		VQuestion: NewVQuestionService(repo.VQuestion),
+		TQuestion: NewTQuestionService(repo.TQuestion),
 	}
 }
