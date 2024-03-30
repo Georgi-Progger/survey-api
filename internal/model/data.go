@@ -23,7 +23,6 @@ type (
 		Education          string
 		ReasonDismissal    string
 		Email              string
-		PhoneNumper        string
 		YearWorkExperience experience
 		EmployeeInfo       string
 	}

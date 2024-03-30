@@ -1,0 +1,2 @@
+ALTER TABLE candidates
+ADD phone CHARACTER VARYING(50);

@@ -14,7 +14,7 @@ import (
 )
 
 // retrieve JWT key from .env file
-var privateKey = []byte(os.Getenv("JWT_PRIVATE_KEY"))
+var privateKey = []byte(os.Getenv("JWT_PRIVATE_KEY")) //TODO privateKey="", fix
 
 // generate JWT token
 func GenerateJWT(user model.User) (string, error) {
