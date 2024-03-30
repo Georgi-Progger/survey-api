@@ -3,4 +3,4 @@ DROP COLUMN phone;
 
 ALTER TABLE candidates
 ADD user_id integer
-REFERENCES users (id);
+REFERENCES users (id) UNIQUE;
