@@ -34,7 +34,8 @@ jobs:
         username: ${{ secrets.SERVER_USER }}
         key: ${{ secrets.SERVER_SSH_KEY }}
         script: |
-          docker pull georhugaev/survey-app:latest
-          docker stop survey-app || true
-          docker rm survey-app || true
-          docker run -d -p 8091:8091 --name survey-app georhugaev/survey-app:latest
+          docker stop $(docker ps -aq) || true 
+          docker rm $(docker ps -aq) || true 
+          docker image prune -af
+          docker pull georhugaev/survey-app:latest 
+          docker run -d -p 8091:8091 --name survey-app georhugaev/survey-app:latest 
