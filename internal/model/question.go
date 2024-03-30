@@ -1,12 +1,27 @@
 package model
 
-type VQuestion struct {
-	Id           int    `json:"id"`
-	QuestionText string `json:"question_text"`
-}
+type (
+	VQuestion struct {
+		Id           int    `json:"id"`
+		QuestionText string `json:"question_text"`
+	}
 
-type QuestionAnswer struct {
-	VQuestionId int
-	UserId      int
-	Path        string 
-}
+	QuestionAnswer struct {
+		VQuestionId int
+		UserId      int
+		Path        string
+	}
+	TestQuestion struct {
+		Id int `json:"id"`
+		Question string `json:"question"`
+		Answers []TestQuestionAnswer `json:"answers"`
+	}
+	TestQuestionAnswer struct {
+		Id int `json:"id"`
+		Answer string `json:"answer"`
+	}
+	UserTestAnswer struct {
+		TestQuestionId int `json:"test_question_id"`
+		TestAnswerId int `json:"test_answer_id"`
+	}
+)
