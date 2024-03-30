@@ -1,8 +1,9 @@
-package util
+package jwt
 
 import (
 	"errors"
 	"fmt"
+	"log"
 	"os"
 	"strings"
 	"time"
@@ -18,6 +19,7 @@ var privateKey = []byte(os.Getenv("JWT_PRIVATE_KEY")) //TODO privateKey="", fix
 
 // generate JWT token
 func GenerateJWT(user model.User) (string, error) {
+	log.Println(string(privateKey))
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"id":   user.Id,
 		"role": user.RoleId,
@@ -41,7 +43,7 @@ func ValidateJWT(context echo.Context) error {
 }
 
 // validate Admin role
-func ValidateAdminRoleJWT(context echo.Context) error {
+func ValidateCandidateRoleJWT(context echo.Context) error {
 	token, err := getToken(context)
 	if err != nil {
 		return err
@@ -69,21 +71,13 @@ func ValidateCustomerRoleJWT(context echo.Context) error {
 }
 
 // fetch user details from the token
-// func CurrentUser(context echo.Context) model.User {
-// 	err := ValidateJWT(context)
-// 	if err != nil {
-// 		return model.User{}
-// 	}
-// 	token, _ := getToken(context)
-// 	claims, _ := token.Claims.(jwt.MapClaims)
-// 	userId := uint(claims["id"].(float64))
+func GetUserIdFromContext(context echo.Context) int {
+	token, _ := getToken(context)
+	claims, _ := token.Claims.(jwt.MapClaims)
+	userId := int(claims["id"].(float64))
 
-// 	user, err := model.GetUserById(userId)
-// 	if err != nil {
-// 		return model.User{}
-// 	}
-// 	return user
-// }
+	return userId
+}
 
 // check token validity
 func getToken(context echo.Context) (*jwt.Token, error) {
