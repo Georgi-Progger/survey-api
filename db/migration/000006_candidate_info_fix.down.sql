@@ -1,2 +1,5 @@
 ALTER TABLE candidates
 ADD phone CHARACTER VARYING(50);
+
+ALTER TABLE candidates
+DROP COLUMN user_id;

@@ -42,18 +42,17 @@ func ValidateJWT(context echo.Context) error {
 	return errors.New("invalid token provided")
 }
 
-// validate Admin role
-func ValidateCandidateRoleJWT(context echo.Context) error {
+func ValidateRole(context echo.Context, id uint) error {
 	token, err := getToken(context)
 	if err != nil {
 		return err
 	}
 	claims, ok := token.Claims.(jwt.MapClaims)
 	userRole := uint(claims["role"].(float64))
-	if ok && token.Valid && userRole == 1 {
+	if ok && token.Valid && userRole == id {
 		return nil
 	}
-	return errors.New("invalid admin token provided")
+	return errors.New("invalid token role")
 }
 
 // validate Customer role

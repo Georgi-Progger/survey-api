@@ -45,12 +45,25 @@ func (h *Handler) InitRoutes() *echo.Echo {
 	interviewGroup.GET("/question", h.GetAllVQuestions)
 	interviewGroup.POST("/video", h.UploadFile)
 
+	//adminGroup := router.Group("/admin")
+
+
 	return router
 }
 
 func candidateAuthMiddleware(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		err := jwt.ValidateCandidateRoleJWT(c)
+		err := jwt.ValidateRole(c, 1)
+		if err != nil {
+			return c.JSON(401, map[string]string{"error": err.Error()})
+		}
+		return next(c)
+	}
+}
+
+func adminAuthMiddleware(next echo.HandlerFunc) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		err := jwt.ValidateRole(c, 2)
 		if err != nil {
 			return c.JSON(401, map[string]string{"error": err.Error()})
 		}
