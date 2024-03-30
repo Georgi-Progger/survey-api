@@ -23,6 +23,7 @@ type (
 		Education          string
 		ReasonDismissal    string
 		Email              string
+		UserId             int
 		YearWorkExperience experience
 		EmployeeInfo       string
 	}

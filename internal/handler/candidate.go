@@ -12,7 +12,6 @@ func (h *Handler) InsertCandidate(c echo.Context) error {
 	if err := c.Bind(&candidate); err != nil {
 		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid JSON"})
 	}
-
 	if err := h.services.Candidate.Create(c.Request().Context(), candidate); err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Failed to insert candidate"})
 	}
