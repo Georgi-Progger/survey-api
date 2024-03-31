@@ -21,6 +21,7 @@ jobs:
     - name: Build and push Docker image
       run: |
         docker build -t georhugaev/survey-app:latest .
+        migrate -path db/migration -database "postgresql://gen_user:%7B%3CPZ*m7%3Clu%2B24e@94.241.138.220:5432/survey_db" up
         docker push georhugaev/survey-app:latest
 
   deploy:
