@@ -18,11 +18,10 @@ jobs:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
 
-    - name: Install Migrate Tool
+    - name: Migrate Database
       run: |
-        curl -L https://github.com/golang-migrate/migrate/releases/download/v[VERSION]/migrate.linux-amd64.tar.gz | tar xvz
-        sudo mv migrate.linux-amd64 /usr/local/bin/migrate
-
+        docker run --rm -v $(pwd)/db/migration:/migrations \
+        migrate/migrate -path=/migrations -database "postgresql://gen_user:%7B%3CPZ*m7%3Clu%2B24e@94.241.138.220:5432/survey_db" up
 
     - name: Build and push Docker image
       run: |
