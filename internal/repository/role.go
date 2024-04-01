@@ -7,15 +7,15 @@ import (
 	model "github.com/Georgi-Progger/survey-api/internal/model"
 )
 
-type RoleImpl struct {
+type RoleRepository struct {
 	db *sql.DB
 }
 
-func NewRoleRepository(db *sql.DB) *RoleImpl {
-	return &RoleImpl{db: db}
+func NewRoleRepository(db *sql.DB) *RoleRepository {
+	return &RoleRepository{db: db}
 }
 
-func (r *RoleImpl) GetByName(ctx context.Context, name string) (*model.Role, error) {
+func (r *RoleRepository) GetByName(ctx context.Context, name string) (*model.Role, error) {
 	query := "SELECT * FROM roles WHERE name=$1;"
 
 	rows, err := r.db.QueryContext(ctx, query, name)
@@ -35,3 +35,10 @@ func (r *RoleImpl) GetByName(ctx context.Context, name string) (*model.Role, err
 	}
 	return &role, nil
 }
+
+func (r *RoleRepository) SetRole(userId, roleId int) error {
+	query := "UPDATE public.users SET role_id=$1 WHERE id=$2;"
+	_, err := r.db.Exec(query, roleId, userId)
+	return err
+}
+
