@@ -47,8 +47,10 @@ func (h *Handler) InitRoutes() *echo.Echo {
 	interviewGroup.POST("/test", h.insertTQuestionAnswers)
 	interviewGroup.POST("/video", h.UploadFile)
 
-	//adminGroup := router.Group("/admin")
-
+	adminGroup := router.Group("/admin")
+	adminGroup.Use(adminAuthMiddleware)
+	adminGroup.GET("/user/role/:id", h.GetAllUsersWithRole)
+	adminGroup.POST("/user/role/set", h.SetUserRole)
 	return router
 }
 

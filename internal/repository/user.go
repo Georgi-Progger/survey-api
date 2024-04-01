@@ -35,3 +35,24 @@ func (r *UserRepository) GetUserByPhonenumber(phonenumber string) (model.User, e
 	err := rows.Scan(&user.Id, &user.RoleId, &user.Phonenumber, &user.Email, &user.Password)
 	return user, err
 }
+
+func (r *UserRepository) GetAllWithRole(roleId int) ([]model.User, error) {
+	query := "SELECT * FROM users WHERE role_id = $1;"
+	rows, err := r.db.Query(query, roleId)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var users []model.User
+	for rows.Next() {
+		var user model.User
+
+		err = rows.Scan(&user.Id, &user.RoleId, &user.Phonenumber, &user.Email, &user.Password)
+		if err != nil {
+			return nil, err
+		}
+		users = append(users, user)
+	}
+	return users, nil
+}

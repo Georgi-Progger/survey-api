@@ -22,6 +22,7 @@ type Video interface {
 type User interface {
 	Save(ctx context.Context, user model.User) (int, error)
 	GetUserByPhonenumber(phonenumber string) (model.User, error)
+	GetAllWithRole(roleId int) ([]model.User, error)
 }
 
 type Sender interface {
@@ -30,6 +31,7 @@ type Sender interface {
 
 type Role interface {
 	GetByName(ctx context.Context, name string) (*model.Role, error)
+	SetRole(userId, roleId int) error
 }
 
 type VQuestion interface {

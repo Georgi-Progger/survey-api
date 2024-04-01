@@ -22,3 +22,7 @@ func (s *UserService) Save(ctx context.Context, user model.User) (int, error) {
 func (s *UserService) GetUserByPhonenumber(phonenumber string) (model.User, error) {
 	return s.repo.GetUserByPhonenumber(phonenumber)
 }
+
+func (s *UserService) GetAllWithRole(roleId int) ([]model.User, error) {
+	return s.repo.GetAllWithRole(roleId)
+}

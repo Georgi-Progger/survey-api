@@ -3,6 +3,7 @@ package handler
 import (
 	"fmt"
 	"net/http"
+	"strconv"
 
 	model "github.com/Georgi-Progger/survey-api/internal/model"
 	"github.com/Georgi-Progger/survey-api/pkg/jwt"
@@ -96,4 +97,34 @@ func checkPasswords(requestPassword, dbPassword string) bool {
 		return false
 	}
 	return true
+}
+
+func (h *Handler) GetAllUsersWithRole(c echo.Context) error {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid role id"})
+	}
+	users, err := h.services.User.GetAllWithRole(id)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"error": err.Error()})
+	}
+
+	return c.JSON(http.StatusOK, users)
+}
+
+type roleChangeDTO struct {
+	RoleId int `json:"role_id"`
+	UserId int `json:"user_id"`
+}
+
+func (h *Handler) SetUserRole(c echo.Context) error {
+	var dto roleChangeDTO
+	if err := c.Bind(&dto); err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid JSON"}) 
+	}
+	err := h.services.Role.SetRole(dto.UserId, dto.RoleId)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Failed to change role"}) 
+	}
+	return c.NoContent(http.StatusOK)
 }
