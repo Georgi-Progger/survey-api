@@ -80,7 +80,7 @@ func (h *Handler) AuthUser(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid JSON"})
 	}
 	dbUser, err := h.services.GetUserByPhonenumber(requestUser.Phonenumber)
-	if err != nil && checkPasswords(requestUser.Password, dbUser.Password) {
+	if err != nil || !isEqualPassword(requestUser.Password, dbUser.Password) {
 		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid credentials"})
 	}
 	jwtStr, err := jwt.GenerateJWT(dbUser)
@@ -91,12 +91,9 @@ func (h *Handler) AuthUser(c echo.Context) error {
 	return c.JSON(200, map[string]string{"jwt": jwtStr})
 }
 
-func checkPasswords(requestPassword, dbPassword string) bool {
-	passwordHash, err := bcrypt.GenerateFromPassword([]byte(requestPassword), bcrypt.DefaultCost)
-	if err != nil || string(passwordHash) != dbPassword {
-		return false
-	}
-	return true
+func isEqualPassword(requestPassword, dbPassword string) bool {
+	err := bcrypt.CompareHashAndPassword([]byte(dbPassword), []byte(requestPassword))
+	return err == nil
 }
 
 func (h *Handler) GetAllUsersWithRole(c echo.Context) error {
