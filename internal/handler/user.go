@@ -80,7 +80,7 @@ func (h *Handler) AuthUser(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid JSON"})
 	}
 	dbUser, err := h.services.GetUserByPhonenumber(requestUser.Phonenumber)
-	if err != nil || checkPasswords(requestUser.Password, dbUser.Password) {
+	if err != nil && checkPasswords(requestUser.Password, dbUser.Password) {
 		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid credentials"})
 	}
 	jwtStr, err := jwt.GenerateJWT(dbUser)
@@ -120,11 +120,11 @@ type roleChangeDTO struct {
 func (h *Handler) SetUserRole(c echo.Context) error {
 	var dto roleChangeDTO
 	if err := c.Bind(&dto); err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid JSON"}) 
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid JSON"})
 	}
 	err := h.services.Role.SetRole(dto.UserId, dto.RoleId)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Failed to change role"}) 
+		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Failed to change role"})
 	}
 	return c.NoContent(http.StatusOK)
 }
