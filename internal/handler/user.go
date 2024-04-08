@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"fmt"
 	"net/http"
 	"strconv"
 
@@ -41,11 +40,6 @@ func (h *Handler) RegistrCandidate(c echo.Context) error {
 	if err != nil {
 		return c.String(http.StatusInternalServerError, err.Error())
 	}
-	fmt.Println(res)
-	err = h.services.Sender.Send(userInfo.Phonenumber, res)
-	if err != nil {
-		return c.String(http.StatusInternalServerError, err.Error())
-	}
 	passwordHash, err := bcrypt.GenerateFromPassword([]byte(res), bcrypt.DefaultCost)
 	if err != nil {
 		return c.String(http.StatusInternalServerError, err.Error())
@@ -57,6 +51,10 @@ func (h *Handler) RegistrCandidate(c echo.Context) error {
 	}
 
 	id, err := h.services.User.Save(c.Request().Context(), user)
+	if err != nil {
+		return c.String(http.StatusInternalServerError, err.Error())
+	}
+	err = h.services.Sender.Send(userInfo.Phonenumber, res)
 	if err != nil {
 		return c.String(http.StatusInternalServerError, err.Error())
 	}
