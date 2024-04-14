@@ -123,3 +123,32 @@ func (h *Handler) SetUserRole(c echo.Context) error {
 	}
 	return c.NoContent(http.StatusOK)
 }
+
+func (h *Handler) ChangeUserPassword(c echo.Context) error {
+	userInfo := userRegDTO{}
+	if err := c.Bind(&userInfo); err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid JSON"})
+	}
+	res, err := password.Generate(6, 6, 0, false, true)
+	if err != nil {
+		return c.String(http.StatusInternalServerError, err.Error())
+	}
+	passwordHash, err := bcrypt.GenerateFromPassword([]byte(res), bcrypt.DefaultCost)
+	if err != nil {
+		return c.String(http.StatusInternalServerError, err.Error())
+	}
+	user, err := h.services.User.GetUserByPhonenumber(userInfo.Phonenumber)
+	if err != nil {
+		return c.String(http.StatusBadRequest, err.Error())
+	}
+	user.Password = string(passwordHash)
+	err = h.services.User.Update(user)
+	if err != nil {
+		return c.String(http.StatusInternalServerError, err.Error())
+	}
+	err = h.services.Sender.Send(userInfo.Phonenumber, res)
+	if err != nil {
+		return c.String(http.StatusInternalServerError, err.Error())
+	}
+	return c.NoContent(http.StatusOK)
+}
