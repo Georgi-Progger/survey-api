@@ -12,4 +12,3 @@ COPY .env .env
 RUN go build -o /app/main ./cmd/hrtechno
 
 CMD ["/app/main"]
-
