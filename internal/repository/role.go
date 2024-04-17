@@ -36,7 +36,7 @@ func (r *RoleRepository) GetByName(ctx context.Context, name string) (*model.Rol
 	return &role, nil
 }
 
-func (r *RoleRepository) SetRole(userId, roleId int) error {
+func (r *RoleRepository) SetRole(userId, roleId int) error { // TODO перенести в юзер репозиторий
 	query := "UPDATE public.users SET role_id=$1 WHERE id=$2;"
 	_, err := r.db.Exec(query, roleId, userId)
 	return err

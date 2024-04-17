@@ -56,3 +56,9 @@ func (r *UserRepository) GetAllWithRole(roleId int) ([]model.User, error) {
 	}
 	return users, nil
 }
+
+func (r *UserRepository) Update(user model.User) error {
+	query := "UPDATE public.users SET role_id=$1, phonenumber=$2, email=$3, password=$4 WHERE id=$5;"
+	_, err := r.db.Exec(query, user.RoleId, user.Phonenumber, user.Email, user.Password, user.Id)
+	return err
+}
