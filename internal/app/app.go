@@ -67,10 +67,7 @@ func doMigration(db *sql.DB) {
 		fmt.Println(err)
 		return
 	}
-	err = m.Up()
-	if err != nil {
-		panic(err)
-	}
+	m.Up()
 }
 
 func ConnectDatabase() (*sql.DB, error) {

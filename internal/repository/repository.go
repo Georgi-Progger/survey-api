@@ -19,7 +19,7 @@ type Role interface {
 type User interface {
 	Save(ctx context.Context, user model.User) (int, error)
 	GetUserByPhonenumber(phonenumber string) (model.User, error)
-	GetAllWithRole(roleId int) ([]model.User, error)
+	GetAllWithRole(roleId int) ([]model.UserWithName, error)
 	Update(user model.User) error
 }
 

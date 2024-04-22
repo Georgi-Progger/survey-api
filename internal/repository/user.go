@@ -36,19 +36,21 @@ func (r *UserRepository) GetUserByPhonenumber(phonenumber string) (model.User, e
 	return user, err
 }
 
-func (r *UserRepository) GetAllWithRole(roleId int) ([]model.User, error) {
-	query := "SELECT * FROM users WHERE role_id = $1;"
+func (r *UserRepository) GetAllWithRole(roleId int) ([]model.UserWithName, error) {
+	query := `SELECT u.*, c.first_name, c.last_name, c.middle_name FROM users u
+JOIN candidates c ON c.user_id = u.id
+WHERE role_id = $1;`
 	rows, err := r.db.Query(query, roleId)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 
-	var users []model.User
+	var users []model.UserWithName
 	for rows.Next() {
-		var user model.User
+		var user model.UserWithName
 
-		err = rows.Scan(&user.Id, &user.RoleId, &user.Phonenumber, &user.Email, &user.Password)
+		err = rows.Scan(&user.Id, &user.RoleId, &user.Phonenumber, &user.Email, &user.Password, &user.FirstName, &user.LastName, &user.MiddleName)
 		if err != nil {
 			return nil, err
 		}
