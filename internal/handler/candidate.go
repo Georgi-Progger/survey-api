@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"encoding/json"
 	"log"
 	"net/http"
 
@@ -44,15 +45,11 @@ func (h *Handler) InsertCandidate(c echo.Context) error {
 
 	contentType := http.DetectContentType(buffer)
 
-	err = UploadToS3(svc, buffer, fileName, contentType)
-	if err != nil {
-		log.Println("Failed to upload file to S3:", err)
-		return c.JSON(http.StatusInternalServerError, map[string]string{"err": "Failed to upload file to S3"})
-	}
+	rawData := c.FormValue("data")
 
 	var candidate model.Candidate
-	if err := c.Bind(&candidate); err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid JSON"})
+	if err := json.Unmarshal([]byte(rawData), &candidate); err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid JSON provided"})
 	}
 	candidate.ResumePath = fileName
 	candidate.UserId = jwt.GetUserIdFromContext(c)
@@ -61,5 +58,11 @@ func (h *Handler) InsertCandidate(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Failed to insert candidate"})
 	}
 
+	err = UploadToS3(svc, buffer, fileName, contentType)
+	if err != nil {
+		log.Println("Failed to upload file to S3:", err)
+		return c.JSON(http.StatusInternalServerError, map[string]string{"err": "Failed to upload file to S3"})
+	}
+	log.Println(fileName)
 	return c.JSON(http.StatusCreated, map[string]string{"message": "Candidate successfully created"})
 }
