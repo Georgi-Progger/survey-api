@@ -33,6 +33,7 @@ func (h *Handler) InitRoutes() *echo.Echo {
 
 	loginFreeCandidateGroup.POST("/registration", h.RegistrCandidate)
 	loginFreeCandidateGroup.POST("/auth", h.AuthUser)
+	loginFreeCandidateGroup.POST("/newpass", h.ChangeUserPassword)
 
 	candidateGroup := loginFreeCandidateGroup.Group("")
 

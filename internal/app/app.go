@@ -3,12 +3,15 @@ package app
 import (
 	"database/sql"
 	"fmt"
+	"github.com/golang-migrate/migrate/v4"
+	"github.com/golang-migrate/migrate/v4/database/postgres"
 	"log"
 	"os"
 
 	"github.com/Georgi-Progger/survey-api/internal/handler"
 	"github.com/Georgi-Progger/survey-api/internal/repository"
 	"github.com/Georgi-Progger/survey-api/internal/service"
+	_ "github.com/golang-migrate/migrate/v4/source/file"
 	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
 	_ "github.com/lib/pq"
@@ -40,6 +43,7 @@ func NewApplication(cfg *Config) (*App, error) {
 	if err != nil {
 		log.Panic("connectionString error..")
 	}
+	doMigration(db)
 	repo := repository.NewRepository(db)
 	surveyService := service.NewService(repo)
 	handler := handler.NewHandler(surveyService)
@@ -48,6 +52,22 @@ func NewApplication(cfg *Config) (*App, error) {
 		config:  cfg,
 		Echo:    handler.InitRoutes(),
 	}, nil
+}
+
+func doMigration(db *sql.DB) {
+	driver, err := postgres.WithInstance(db, &postgres.Config{})
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	m, err := migrate.NewWithDatabaseInstance(
+		"file://db/migration",
+		os.Getenv("DB_NAME"), driver)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	m.Up()
 }
 
 func ConnectDatabase() (*sql.DB, error) {
