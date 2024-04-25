@@ -26,6 +26,7 @@ type (
 		UserId             int
 		YearWorkExperience experience
 		EmployeeInfo       string
+		ResumePath string
 	}
 	Interview struct {
 		Id            uint
