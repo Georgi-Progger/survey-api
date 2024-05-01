@@ -38,6 +38,7 @@ type VQuestion interface {
 type TQuestion interface {
 	GetAll() ([]model.TestQuestion, error)
 	InsertAnswers(userId int, answers []model.UserTestAnswer) error
+	GetUserAnswers(userId int) ([]model.UserTestAnswer, error)
 }
 
 type Repository struct {

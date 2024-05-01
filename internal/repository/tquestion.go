@@ -58,3 +58,9 @@ func (r *TQuestionRepository) InsertAnswers(userId int, answers []model.UserTest
 	}
 	return tx.Commit()
 }
+
+func (r *TQuestionRepository) GetUserAnswers(userId int) ([]model.UserTestAnswer, error) {
+	// query := `SELECT a.test_question_id, a.test_answer_id FROM public.test_user_answer a
+	// WHERE a.user_id = 1` 
+	return nil, nil // TODO закончить
+}
