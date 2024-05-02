@@ -20,3 +20,7 @@ func (s *TQuestionService) GetAll() ([]model.TestQuestion, error) {
 func (s *TQuestionService) InsertAnswers(userId int, answers []model.UserTestAnswer) error {
 	return s.repo.InsertAnswers(userId, answers)
 }
+
+func (s *TQuestionService) GetUserAnswers(userId int) ([]model.UserTestAnswer, error) {
+	return s.repo.GetUserAnswers(userId)
+}
