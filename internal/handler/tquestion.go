@@ -13,7 +13,7 @@ func (h *Handler) getAllTQuestions(c echo.Context) error {
 	res, err := h.services.TQuestion.GetAll()
 	if err != nil {
 		log.Println(err)
-		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Failed to get all video test questions"})
+		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Failed to get all video test questions: " + err.Error()})
 	}
 	return c.JSON(http.StatusOK, res)
 }
@@ -22,12 +22,12 @@ func (h *Handler) insertTQuestionAnswers(c echo.Context) error {
 	var ans []model.UserTestAnswer
 	if err := c.Bind(&ans); err != nil {
 		log.Println(err)
-		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid JSON provided"}) 
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid JSON provided: " + err.Error()}) 
 	}
 	err := h.services.TQuestion.InsertAnswers(jwt.GetUserIdFromContext(c), ans)
 	if err != nil {
 		log.Println(err)
-		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Failed to save answers in db"}) 
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Failed to save answers in db: " + err.Error()}) 
 	}
 	return c.NoContent(http.StatusCreated)
 }
@@ -52,7 +52,7 @@ func (h *Handler) getPonomarUserResult(c echo.Context) error {
 
 	userAns, err := h.services.TQuestion.GetUserAnswers(jwt.GetUserIdFromContext(c))
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, map[string]string{"err": "Failed get user answers from db"})
+		return c.JSON(http.StatusInternalServerError, map[string]string{"err": "Failed get user answers from db: " + err.Error()})
 	}
 	var ansResult model.PonomarResult
 	for _, ans := range userAns {

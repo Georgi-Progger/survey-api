@@ -18,7 +18,7 @@ func (h *Handler) InsertCandidate(c echo.Context) error {
 	sess, err := CreateSession()
 	if err != nil {
 		log.Println("Failed to create session:", err)
-		return c.JSON(http.StatusInternalServerError, map[string]string{"err": "Failed to open file"})
+		return c.JSON(http.StatusInternalServerError, map[string]string{"err": "Failed to open file: " + err.Error() })
 	}
 
 	svc := s3.New(sess)
@@ -26,11 +26,11 @@ func (h *Handler) InsertCandidate(c echo.Context) error {
 	file, err := c.FormFile("file")
 	if err != nil {
 		log.Println("Failed to open file:", err)
-		return c.JSON(http.StatusInternalServerError, map[string]string{"err": "Failed to open file"})
+		return c.JSON(http.StatusInternalServerError, map[string]string{"err": "Failed to open file: " + err.Error()})
 	}
 	src, err := file.Open()
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, map[string]string{"err": "Failed to read file"})
+		return c.JSON(http.StatusInternalServerError, map[string]string{"err": "Failed to read file: " + err.Error()})
 	}
 	defer src.Close()
 	fileName := uuid.New().String()
@@ -40,7 +40,7 @@ func (h *Handler) InsertCandidate(c echo.Context) error {
 	_, err = src.Read(buffer)
 	if err != nil {
 		log.Println("Failed to read file:", err)
-		return c.JSON(http.StatusInternalServerError, map[string]string{"err": "Failed to read file"})
+		return c.JSON(http.StatusInternalServerError, map[string]string{"err": "Failed to read file: " + err.Error()})
 	}
 
 	contentType := http.DetectContentType(buffer)
@@ -49,20 +49,20 @@ func (h *Handler) InsertCandidate(c echo.Context) error {
 
 	var candidate model.Candidate
 	if err := json.Unmarshal([]byte(rawData), &candidate); err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid JSON provided"})
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid JSON provided: " + err.Error()})
 	}
 	candidate.ResumePath = fileName
 	candidate.UserId = jwt.GetUserIdFromContext(c)
 	if err := h.services.Candidate.Create(c.Request().Context(), candidate); err != nil {
 		log.Println(err)
-		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Failed to insert candidate"})
+		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Failed to insert candidate: " + err.Error()})
 	}
 
 	err = UploadToS3(svc, buffer, fileName, contentType)
 	if err != nil {
 		log.Println("Failed to upload file to S3:", err)
-		return c.JSON(http.StatusInternalServerError, map[string]string{"err": "Failed to upload file to S3"})
+		return c.JSON(http.StatusInternalServerError, map[string]string{"err": "Failed to upload file to S3: " + err.Error()})
 	}
 	log.Println(fileName)
-	return c.JSON(http.StatusCreated, map[string]string{"message": "Candidate successfully created"})
+	return c.JSON(http.StatusCreated, map[string]string{"message": "Candidate successfully created: " + err.Error()})
 }
