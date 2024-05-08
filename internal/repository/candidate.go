@@ -3,6 +3,8 @@ package repository
 import (
 	"context"
 	"database/sql"
+	"fmt"
+	"time"
 
 	model "github.com/Georgi-Progger/survey-api/internal/model"
 )
@@ -20,11 +22,20 @@ func (r *CandidateImpl) Create(ctx context.Context, candidate model.Candidate) e
 	INSERT INTO candidates (first_name, last_name, 
 	  middle_name, date_of_birth, city, education, reason_dismissal,
 	  email, year_work_experience, employee_entered_info, user_id, resume_path)
-	VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+	VALUES ($1, $2, $3, $4::date, $5, $6, $7, $8, $9, $10, $11, $12)
 `
 
-	_, err := r.db.ExecContext(ctx, query, candidate.FirstName, candidate.LastName,
-		candidate.MiddleName, candidate.BirthDate,
+	layout := "02.01.2006"
+	date, err := time.Parse(layout, candidate.BirthDate)
+	if err != nil {
+		fmt.Println("Ошибка при преобразовании строки во временной формат")
+		return fmt.Errorf("не верный формат даты")
+	}
+
+	dateForPostgres := date.Format("2006-01-02")
+
+	_, err = r.db.ExecContext(ctx, query, candidate.FirstName, candidate.LastName,
+		candidate.MiddleName, dateForPostgres,
 		candidate.City, candidate.Education, candidate.ReasonDismissal,
 		candidate.Email, candidate.YearWorkExperience,
 		candidate.EmployeeInfo, candidate.UserId, candidate.ResumePath)
