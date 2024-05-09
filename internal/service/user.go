@@ -23,7 +23,7 @@ func (s *UserService) GetUserByPhonenumber(phonenumber string) (model.User, erro
 	return s.repo.GetUserByPhonenumber(phonenumber)
 }
 
-func (s *UserService) GetAllWithRole(roleId int) ([]model.UserWithName, error) {
+func (s *UserService) GetAllWithRole(roleId int) ([]model.UserWithInfo, error) {
 	return s.repo.GetAllWithRole(roleId)
 }
 

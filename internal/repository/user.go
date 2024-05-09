@@ -36,21 +36,24 @@ func (r *UserRepository) GetUserByPhonenumber(phonenumber string) (model.User, e
 	return user, err
 }
 
-func (r *UserRepository) GetAllWithRole(roleId int) ([]model.UserWithName, error) {
-	query := `SELECT u.*, c.first_name, c.last_name, c.middle_name FROM users u
-JOIN candidates c ON c.user_id = u.id
-WHERE role_id = $1;`
+func (r *UserRepository) GetAllWithRole(roleId int) ([]model.UserWithInfo, error) {
+	query := `
+	SELECT u.id, u.role_id, u.phonenumber, c.first_name, c.last_name, c.middle_name, c.date_of_birth, c.city, c.education, c.reason_dismissal, c.email, c.year_work_experience, c.resume_path, c.creation_date
+	FROM users u
+	JOIN candidates c ON c.user_id = u.id
+	WHERE role_id = $1;
+`
 	rows, err := r.db.Query(query, roleId)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 
-	var users []model.UserWithName
+	var users []model.UserWithInfo
 	for rows.Next() {
-		var user model.UserWithName
+		var user model.UserWithInfo
 
-		err = rows.Scan(&user.Id, &user.RoleId, &user.Phonenumber, &user.Email, &user.Password, &user.FirstName, &user.LastName, &user.MiddleName)
+		err = rows.Scan(&user.Id, &user.RoleId, &user.Phonenumber, &user.FirstName, &user.LastName, &user.MiddleName, &user.DateOfBirth, &user.City, &user.Education, &user.ReasonDismissal, &user.Email, &user.YearWorkExperience, &user.ResumePath, &user.CreationDate)
 		if err != nil {
 			return nil, err
 		}
