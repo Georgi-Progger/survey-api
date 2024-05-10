@@ -112,7 +112,7 @@ type roleChangeDTO struct {
 	UserId int `json:"user_id"`
 }
 
-func (h *Handler) SetUserRole(c echo.Context) error {
+func (h *Handler) SetUserRole(c echo.Context) error { // 1 - на рссмотрении, 2 - отказ, 3 - принят
 	var dto roleChangeDTO
 	if err := c.Bind(&dto); err != nil {
 		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid JSON: " + err.Error()})
