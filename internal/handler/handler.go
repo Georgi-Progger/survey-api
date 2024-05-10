@@ -41,6 +41,10 @@ func (h *Handler) InitRoutes() *echo.Echo {
 	candidateGroup.POST("/create", h.InsertCandidate)
 	candidateGroup.GET("/questions", h.SelectInterview)
 
+	userGroup := router.Group("/user")
+	userGroup.Use(userAuthMiddleware)
+	userGroup.GET("/info", h.getCurrentUserInfo)
+
 	interviewGroup := router.Group("/interview")
 	interviewGroup.Use(candidateAuthMiddleware)
 	interviewGroup.GET("/question", h.GetAllVQuestions)
@@ -58,6 +62,16 @@ func (h *Handler) InitRoutes() *echo.Echo {
 func candidateAuthMiddleware(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		err := jwt.ValidateRole(c, 1)
+		if err != nil {
+			return c.JSON(401, map[string]string{"error": err.Error()})
+		}
+		return next(c)
+	}
+}
+
+func userAuthMiddleware(next echo.HandlerFunc) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		err := jwt.ValidateJWT(c)
 		if err != nil {
 			return c.JSON(401, map[string]string{"error": err.Error()})
 		}

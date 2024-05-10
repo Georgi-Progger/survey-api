@@ -152,3 +152,20 @@ func (h *Handler) ChangeUserPassword(c echo.Context) error {
 	}
 	return c.NoContent(http.StatusOK)
 }
+
+func (h *Handler) getCurrentUserInfo(c echo.Context) error {
+	id := jwt.GetUserIdFromContext(c)
+	user, err := h.services.User.GetById(id)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Get user error: " + err.Error()})
+	}
+	candidate, err := h.services.Candidate.GetByUserId(id)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Get candidate info error: " + err.Error()})
+	}
+	return c.JSON(http.StatusOK, map[string]any{
+		"role_id":     user.RoleId,
+		"first_name":  candidate.FirstName,
+		"last_name":   candidate.LastName,
+		"middle_name": candidate.MiddleName})
+}

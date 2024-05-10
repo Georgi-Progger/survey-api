@@ -30,3 +30,7 @@ func (s *UserService) GetAllWithRole(roleId int) ([]model.UserWithInfo, error) {
 func (s *UserService) Update(user model.User) error {
 	return s.repo.Update(user)
 }
+
+func (s *UserService) GetById(id int) (model.User, error) {
+	return s.repo.GetById(id)
+}

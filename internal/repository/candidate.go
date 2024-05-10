@@ -41,3 +41,15 @@ func (r *CandidateImpl) Create(ctx context.Context, candidate model.Candidate) e
 		candidate.EmployeeInfo, candidate.UserId, candidate.ResumePath)
 	return err
 }
+
+func (r *CandidateImpl) GetByUserId(id int) (model.Candidate, error) {
+	query := "SELECT * FROM candidates WHERE user_id=$1;"
+	rows := r.db.QueryRow(query, id)
+	cnd := model.Candidate{}
+	err := rows.Scan(&cnd.Id, &cnd.FirstName, &cnd.LastName,
+		&cnd.MiddleName, &cnd.BirthDate,
+		&cnd.City, &cnd.Education, &cnd.ReasonDismissal,
+		&cnd.Email, &cnd.YearWorkExperience,
+		&cnd.EmployeeInfo, &cnd.UserId, &cnd.ResumePath, &cnd.CreationDate)
+	return cnd, err
+}

@@ -18,3 +18,7 @@ func NewCandidateService(repo repository.Candidate) *CandidateService {
 func (s *CandidateService) Create(ctx context.Context, candidate model.Candidate) error {
 	return s.repo.Create(ctx, candidate)
 }
+
+func (s *CandidateService) GetByUserId(id int) (model.Candidate, error) {
+	return s.repo.GetByUserId(id)
+}

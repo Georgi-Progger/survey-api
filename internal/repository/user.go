@@ -67,3 +67,11 @@ func (r *UserRepository) Update(user model.User) error {
 	_, err := r.db.Exec(query, user.RoleId, user.Phonenumber, user.Email, user.Password, user.Id)
 	return err
 }
+
+func (r *UserRepository) GetById(id int) (model.User, error) {
+	query := "SELECT * FROM users WHERE id=$1;"
+	rows := r.db.QueryRow(query, id)
+	user := model.User{}
+	err := rows.Scan(&user.Id, &user.RoleId, &user.Phonenumber, &user.Email, &user.Password)
+	return user, err
+} 

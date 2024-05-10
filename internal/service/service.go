@@ -9,6 +9,7 @@ import (
 
 type Candidate interface {
 	Create(ctx context.Context, candidate model.Candidate) error
+	GetByUserId(id int) (model.Candidate, error)
 }
 
 type Interview interface {
@@ -24,6 +25,7 @@ type User interface {
 	GetUserByPhonenumber(phonenumber string) (model.User, error)
 	GetAllWithRole(roleId int) ([]model.UserWithInfo, error)
 	Update(user model.User) error
+	GetById(id int) (model.User, error)
 }
 
 type Sender interface {
