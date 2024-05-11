@@ -121,7 +121,7 @@ func (h *Handler) SetUserRole(c echo.Context) error { // 1 - на рссмотр
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Failed to change role: " + err.Error()})
 	}
-	return c.NoContent(http.StatusOK)
+	return c.JSON(http.StatusOK, map[string]string{"message": "Complete"})
 }
 
 func (h *Handler) ChangeUserPassword(c echo.Context) error {
