@@ -1,0 +1,13 @@
+INSERT INTO public.test_question (id, question) VALUES (1, 'В городском музее изобразительных искусств планируется проведение (в течение 2-х дней) выставки редких живописных полотен. ');
+INSERT INTO public.test_question (id, question) VALUES (2, 'Знакомый обратился к Вам с просьбой одолжить некоторую сумму денег.');
+INSERT INTO public.test_question (id, question) VALUES (3, 'В телевизионной передаче один из участников убеждённо сказал, что в нормальной семье должно быть строгое распределение обязанностей – на сугубо «мужские» и исключительно «женские».');
+INSERT INTO public.test_question (id, question) VALUES (4, 'Семья приятелей приглашает Вас провести выходные у них на даче.');
+INSERT INTO public.test_question (id, question) VALUES (5, 'Пришло время для ремонта Вашей квартиры.');
+INSERT INTO public.test_question (id, question) VALUES (6, 'Ваш приятель купил спортивный автомобиль.');
+INSERT INTO public.test_question (id, question) VALUES (7, 'Коллега подарил Вам на День рождения дорогой подарок. ');
+INSERT INTO public.test_question (id, question) VALUES (8, 'Вы потеряли кошелёк с крупной суммой денег.');
+INSERT INTO public.test_question (id, question) VALUES (9, 'Руководство компании объявило о выплате хороших премиальных. Однако выяснилось, что Ваш ближайший коллега получит денег больше чем Вы.');
+INSERT INTO public.test_question (id, question) VALUES (10, 'Ваши знакомые рассказали, что их восьмилетний мальчик иногда ворует у других какую-то мелочь.');
+INSERT INTO public.test_question (id, question) VALUES (11, 'Ваш друг, проходя медкомиссию, узнал, что у него не все в порядке в анализах, но не хочет уточнять у врачей, что именно.');
+INSERT INTO public.test_question (id, question) VALUES (12, 'Ваш товарищ купил квартиру по ипотечному кредиту, но сложились такие обстоятельства, что он не может погасить кредит.');
+INSERT INTO public.test_question (id, question) VALUES (13, 'Ваш знакомый оставил престижную и высокооплачиваемую работу и уехал жить и работать фермером в деревню. ');
