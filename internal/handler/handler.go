@@ -37,7 +37,7 @@ func (h *Handler) InitRoutes() *echo.Echo {
 
 	candidateGroup := loginFreeCandidateGroup.Group("")
 
-	candidateGroup.Use(candidateAuthMiddleware)
+	candidateGroup.Use(userAuthMiddleware)
 	candidateGroup.POST("/create", h.InsertCandidate)
 	candidateGroup.GET("/questions", h.SelectInterview)
 
@@ -46,7 +46,7 @@ func (h *Handler) InitRoutes() *echo.Echo {
 	userGroup.GET("/info", h.getCurrentUserInfo)
 
 	interviewGroup := router.Group("/interview")
-	interviewGroup.Use(candidateAuthMiddleware)
+	interviewGroup.Use(userAuthMiddleware)
 	interviewGroup.GET("/question", h.GetAllVQuestions)
 	interviewGroup.GET("/test", h.getAllTQuestions)
 	interviewGroup.POST("/test", h.insertTQuestionAnswers)
