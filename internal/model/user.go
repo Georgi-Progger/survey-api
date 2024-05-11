@@ -11,7 +11,7 @@ type User struct {
 type UserWithInfo struct {
 	Id          int
 	RoleId      int    `json:"role_id"`
-	Email       string `json:"-"`
+	Email       string `json:"email"`
 	Phonenumber string `json:"phonenumber"`
 	Password    string `json:"-"`
 	FirstName   string `json:"first_name"`
