@@ -24,8 +24,9 @@ func (h *Handler) InitRoutes() *echo.Echo {
 
 	router.Use(middleware.Logger())
 	router.Use(middleware.CORSWithConfig(middleware.CORSConfig{
-		AllowOrigins: []string{"*"},
-		AllowMethods: []string{http.MethodGet, http.MethodPut, http.MethodPost, http.MethodDelete},
+		AllowOrigins:     []string{"*"},
+		AllowMethods:     []string{http.MethodGet, http.MethodPut, http.MethodPost, http.MethodDelete},
+		AllowCredentials: true,
 	}))
 	router.GET("/swagger/*", echoSwagger.WrapHandler)
 
