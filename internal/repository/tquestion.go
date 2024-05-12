@@ -66,7 +66,7 @@ func (r *TQuestionRepository) GetUserAnswers(userId int) ([]model.UserTestAnswer
 	if err != nil {
 		return nil, err
 	}
-	answers := make([]model.UserTestAnswer, 10)
+	answers := make([]model.UserTestAnswer, 0)
 	for rows.Next() {
 		var ans model.UserTestAnswer
 		err = rows.Scan(&ans.TestQuestionId, &ans.TestAnswerId) 

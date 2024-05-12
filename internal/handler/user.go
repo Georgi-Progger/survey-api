@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/Georgi-Progger/survey-api/internal/mapper"
 	model "github.com/Georgi-Progger/survey-api/internal/model"
 	"github.com/Georgi-Progger/survey-api/pkg/jwt"
 	"github.com/labstack/echo/v4"
@@ -105,6 +106,26 @@ func (h *Handler) GetAllUsersWithRole(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, users)
+}
+
+func (h *Handler) GetAllUsersWithForm(c echo.Context) error {
+	users, err := h.services.User.GetAll()
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Failed to get users from db:  " + err.Error()})
+	}
+	usersInfo := make([]model.UserWithInfo, 0)
+	for _, user := range users {
+		candid, err := h.services.Candidate.GetByUserId(user.Id)
+		if err != nil {
+			continue
+			//return c.JSON(http.StatusInternalServerError, map[string]string{"error": "Failed to get candidate info from db:  " + err.Error()})
+		}
+		var userInfo model.UserWithInfo
+		userInfo = mapper.UserToUserWithInfo(user, userInfo)
+		userInfo = mapper.CandidateToUserWithInfo(candid, userInfo)
+		usersInfo = append(usersInfo, userInfo)
+	}
+	return c.JSON(http.StatusOK, usersInfo)
 }
 
 type roleChangeDTO struct {

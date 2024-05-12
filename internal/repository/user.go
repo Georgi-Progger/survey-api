@@ -75,3 +75,21 @@ func (r *UserRepository) GetById(id int) (model.User, error) {
 	err := rows.Scan(&user.Id, &user.RoleId, &user.Phonenumber, &user.Password)
 	return user, err
 } 
+
+func (r *UserRepository) GetAll() ([]model.User, error) {
+	query := "SELECT * FROM users;"
+	rows, err := r.db.Query(query)
+	if err != nil {
+		return nil, err
+	}
+	users := make([]model.User,0)
+	for rows.Next() {
+		user := model.User{}
+		err := rows.Scan(&user.Id, &user.RoleId, &user.Phonenumber, &user.Password)
+		if err != nil {
+			return nil, err
+		}
+		users = append(users, user)
+	}
+	return users, nil
+}

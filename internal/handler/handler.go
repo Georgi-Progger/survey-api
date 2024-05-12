@@ -55,6 +55,7 @@ func (h *Handler) InitRoutes() *echo.Echo {
 
 	adminGroup := router.Group("/admin")
 	adminGroup.Use(adminAuthMiddleware)
+	adminGroup.GET("/user/role", h.GetAllUsersWithForm)
 	adminGroup.GET("/user/role/:id", h.GetAllUsersWithRole)
 	adminGroup.POST("/user/role/set", h.SetUserRole)
 	return router
