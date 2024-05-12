@@ -26,6 +26,7 @@ type User interface {
 	GetAllWithRole(roleId int) ([]model.UserWithInfo, error)
 	Update(user model.User) error
 	GetById(id int) (model.User, error)
+	GetAll() ([]model.User, error)
 }
 
 type Sender interface {

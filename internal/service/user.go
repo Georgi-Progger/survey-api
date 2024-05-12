@@ -34,3 +34,7 @@ func (s *UserService) Update(user model.User) error {
 func (s *UserService) GetById(id int) (model.User, error) {
 	return s.repo.GetById(id)
 }
+
+func (s *UserService) GetAll() ([]model.User, error) {
+	return s.repo.GetAll()
+}
