@@ -1,6 +1,10 @@
 package mapper
 
-import "github.com/Georgi-Progger/survey-api/internal/model"
+import (
+	"fmt"
+
+	"github.com/Georgi-Progger/survey-api/internal/model"
+)
 
 func UserToUserWithInfo(user model.User, info model.UserWithInfo) model.UserWithInfo {
 	info.Id = user.Id
@@ -23,6 +27,6 @@ func CandidateToUserWithInfo(cnd model.Candidate, info model.UserWithInfo) model
 	info.ReasonDismissal = cnd.ReasonDismissal
 	info.ResumePath = cnd.ResumePath
 	info.Id = cnd.UserId
-	info.YearWorkExperience = string(cnd.YearWorkExperience)
+	info.YearWorkExperience = fmt.Sprint(cnd.YearWorkExperience)
 	return info
 }

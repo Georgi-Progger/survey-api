@@ -1,17 +1,5 @@
 package model
 
-type experience uint
-
-const (
-	Not experience = iota
-	LessThanAYear
-	OneYear
-	TwoYear
-	ThreeYear
-	FourYear
-	MoreThanAYear
-)
-
 type (
 	Candidate struct {
 		Id                 uint
@@ -24,7 +12,7 @@ type (
 		ReasonDismissal    string
 		Email              string
 		UserId             int
-		YearWorkExperience experience
+		YearWorkExperience int
 		EmployeeInfo       string
 		ResumePath         string
 		CreationDate       string
