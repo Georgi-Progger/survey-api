@@ -16,9 +16,9 @@ func NewUserRepository(db *sql.DB) *UserRepository {
 }
 
 func (r *UserRepository) Save(ctx context.Context, user model.User) (int, error) {
-	query := "INSERT INTO users(role_id, phonenumber, email, password) VALUES($1, $2, $3, $4) RETURNING id;"
+	query := "INSERT INTO users(role_id, phonenumber, password) VALUES($1, $2, $3) RETURNING id;"
 	id := 0
-	rows := r.db.QueryRowContext(ctx, query, user.RoleId, user.Phonenumber, user.Email, user.Password)
+	rows := r.db.QueryRowContext(ctx, query, user.RoleId, user.Phonenumber, user.Password)
 	if err := rows.Scan(&id); err != nil {
 		return 0, err
 	}
@@ -32,7 +32,7 @@ func (r *UserRepository) GetUserByPhonenumber(phonenumber string) (model.User, e
 	query := "SELECT * FROM users WHERE phonenumber=$1;"
 	rows := r.db.QueryRow(query, phonenumber)
 	user := model.User{}
-	err := rows.Scan(&user.Id, &user.RoleId, &user.Phonenumber, &user.Email, &user.Password)
+	err := rows.Scan(&user.Id, &user.RoleId, &user.Phonenumber, &user.Password)
 	return user, err
 }
 
@@ -63,8 +63,8 @@ func (r *UserRepository) GetAllWithRole(roleId int) ([]model.UserWithInfo, error
 }
 
 func (r *UserRepository) Update(user model.User) error {
-	query := "UPDATE public.users SET role_id=$1, phonenumber=$2, email=$3, password=$4 WHERE id=$5;"
-	_, err := r.db.Exec(query, user.RoleId, user.Phonenumber, user.Email, user.Password, user.Id)
+	query := "UPDATE public.users SET role_id=$1, phonenumber=$2, password=$4 WHERE id=$5;"
+	_, err := r.db.Exec(query, user.RoleId, user.Phonenumber, user.Password, user.Id)
 	return err
 }
 
@@ -72,6 +72,6 @@ func (r *UserRepository) GetById(id int) (model.User, error) {
 	query := "SELECT * FROM users WHERE id=$1;"
 	rows := r.db.QueryRow(query, id)
 	user := model.User{}
-	err := rows.Scan(&user.Id, &user.RoleId, &user.Phonenumber, &user.Email, &user.Password)
+	err := rows.Scan(&user.Id, &user.RoleId, &user.Phonenumber, &user.Password)
 	return user, err
 } 
