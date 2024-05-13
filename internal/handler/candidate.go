@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"strings"
 
 	model "github.com/Georgi-Progger/survey-api/internal/model"
 	"github.com/Georgi-Progger/survey-api/pkg/jwt"
@@ -33,8 +34,10 @@ func (h *Handler) InsertCandidate(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"err": "Failed to read file: " + err.Error()})
 	}
 	defer src.Close()
-	fileName := uuid.New().String()
+	ext := strings.Split(file.Filename, ".")
+	fileName := uuid.New().String() + "." + ext[len(ext) - 1]
 	size := file.Size
+	log.Println(ext[len(ext) - 1])
 
 	buffer := make([]byte, size)
 	_, err = src.Read(buffer)
