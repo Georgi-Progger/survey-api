@@ -16,7 +16,8 @@ func NewTQuestionRepository(db *sql.DB) *TQuestionRepository {
 
 func (r *TQuestionRepository) GetAll() ([]model.TestQuestion, error) {
 	query := `SELECT test_question.id, question, test_answer.id, answer  FROM test_question
-	LEFT JOIN test_answer ON test_question_id = test_question.id;`
+	LEFT JOIN test_answer ON test_question_id = test_question.id
+	ORDER BY test_question.id ASC, test_answer.id ASC;`
 
 	rows, err := r.db.Query(query)
 	if err != nil {

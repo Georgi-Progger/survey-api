@@ -55,7 +55,11 @@ func (h *Handler) getPonomarUserResult(c echo.Context) error {
 	}
 	var ansResult model.PonomarResult
 	for _, ans := range userAns {
-		switch testAnsExplain[ans.TestQuestionId-1][ans.TestAnswerId%(ans.TestQuestionId*7)-1] {
+		ind := ans.TestAnswerId%7 - 1
+		if ind == -1 {
+			ind = 6
+		}
+		switch testAnsExplain[ans.TestQuestionId-1][ind] {
 		case "Hysteroid":
 			ansResult.Hysteroid++
 		case "Epileptoid":
