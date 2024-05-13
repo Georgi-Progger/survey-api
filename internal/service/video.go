@@ -15,5 +15,5 @@ func NewVideoService(repo repository.Video) *VideoService {
 }
 
 func (s *VideoService) Save(ctx context.Context, vquestionId, userId int, filePath string) error {
-	return s.repo.Save(ctx, vquestionId,userId,filePath)
+	return s.repo.Save(ctx, vquestionId, userId, filePath)
 }

@@ -36,3 +36,28 @@ func (r *VQuestionRepository) GetAll() ([]model.VQuestion, error) {
 	}
 	return vqsts, nil
 }
+
+func (r *VQuestionRepository) GetAllByUserIdWithQuestions(userId int) ([]model.VQuestionAndAnswer, error) {
+	query := `
+	SELECT video_path, question FROM public.question_answer q
+	JOIN video_question AS v ON v.id = q.video_question_id
+	WHERE  q.user_id = $1
+	`
+
+	rows, err := r.db.Query(query, userId)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	result := make([]model.VQuestionAndAnswer, 0)
+	for rows.Next() {
+		var row model.VQuestionAndAnswer
+		err = rows.Scan(&row.AnswerPath, &row.Question)
+		if err != nil {
+			return nil, err
+		}
+		result = append(result, row)
+	}
+	return result, nil
+}

@@ -40,6 +40,7 @@ type Role interface {
 
 type VQuestion interface {
 	GetAll() ([]model.VQuestion, error)
+	GetAllByUserIdWithQuestions(userId int) ([]model.VQuestionAndAnswer, error)
 }
 
 type TQuestion interface {

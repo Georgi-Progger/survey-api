@@ -57,6 +57,7 @@ func (h *Handler) InitRoutes() *echo.Echo {
 	adminGroup.Use(adminAuthMiddleware)
 	adminGroup.GET("/user/role", h.GetAllUsersWithForm)
 	adminGroup.GET("/user/role/:id", h.GetAllUsersWithRole)
+	adminGroup.GET("/user/interview/answers/:id", h.GetAllVAnswersByUserId)
 	adminGroup.POST("/user/role/set", h.SetUserRole)
 	return router
 }

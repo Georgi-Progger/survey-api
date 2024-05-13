@@ -16,3 +16,7 @@ func NewVQuestionService(repo repository.VQuestion) *VQuestionService {
 func (s *VQuestionService) GetAll() ([]model.VQuestion, error) {
 	return s.repo.GetAll()
 }
+
+func (s *VQuestionService) 	GetAllByUserIdWithQuestions(userId int) ([]model.VQuestionAndAnswer, error) {
+	return s.repo.GetAllByUserIdWithQuestions(userId)
+}
