@@ -55,7 +55,7 @@ func (h *Handler) getPonomarUserResult(c echo.Context) error {
 	}
 	var ansResult model.PonomarResult
 	for _, ans := range userAns {
-		switch testAnsExplain[ans.TestQuestionId-1][ans.TestAnswerId-1] {
+		switch testAnsExplain[ans.TestQuestionId-1][ans.TestAnswerId%(ans.TestQuestionId*7)-1] {
 		case "Hysteroid":
 			ansResult.Hysteroid++
 		case "Epileptoid":
@@ -72,14 +72,14 @@ func (h *Handler) getPonomarUserResult(c echo.Context) error {
 			ansResult.Anxious++
 		}
 	}
-	kf := 100.0/13
-	ansResult.Anxious *= kf 
-	ansResult.Emotional *= kf 
-	ansResult.Epileptoid *= kf 
-	ansResult.Hyperthymic *= kf 
-	ansResult.Hysteroid *= kf 
-	ansResult.Paranoid *= kf 
-	ansResult.Schizoid *= kf 
+	kf := 100.0 / 13
+	ansResult.Anxious *= kf
+	ansResult.Emotional *= kf
+	ansResult.Epileptoid *= kf
+	ansResult.Hyperthymic *= kf
+	ansResult.Hysteroid *= kf
+	ansResult.Paranoid *= kf
+	ansResult.Schizoid *= kf
 
 	return c.JSON(http.StatusOK, ansResult)
 }

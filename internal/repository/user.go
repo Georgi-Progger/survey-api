@@ -63,7 +63,7 @@ func (r *UserRepository) GetAllWithRole(roleId int) ([]model.UserWithInfo, error
 }
 
 func (r *UserRepository) Update(user model.User) error {
-	query := "UPDATE public.users SET role_id=$1, phonenumber=$2, password=$4 WHERE id=$5;"
+	query := "UPDATE public.users SET role_id=$1, phonenumber=$2, password=$3 WHERE id=$4;"
 	_, err := r.db.Exec(query, user.RoleId, user.Phonenumber, user.Password, user.Id)
 	return err
 }
