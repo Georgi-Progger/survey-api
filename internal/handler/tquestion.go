@@ -22,32 +22,31 @@ func (h *Handler) insertTQuestionAnswers(c echo.Context) error {
 	var ans []model.UserTestAnswer
 	if err := c.Bind(&ans); err != nil {
 		log.Println(err)
-		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid JSON provided: " + err.Error()}) 
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid JSON provided: " + err.Error()})
 	}
 	err := h.services.TQuestion.InsertAnswers(jwt.GetUserIdFromContext(c), ans)
 	if err != nil {
 		log.Println(err)
-		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Failed to save answers in db: " + err.Error()}) 
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Failed to save answers in db: " + err.Error()})
 	}
 	return c.NoContent(http.StatusCreated)
 }
 
-
 func (h *Handler) getPonomarUserResult(c echo.Context) error {
-	testAnsExplain :=[][]string{
-		[]string{"Hysteroid","Emotional","Epileptoid","Hyperthymic","Paranoid","Anxious","Schizoid"}, // A
-		[]string{"Emotional","Epileptoid","Schizoid","Hyperthymic","Hysteroid","Paranoid","Anxious"}, // Б
-		[]string{"Paranoid","Schizoid","Emotional","Epileptoid","Hysteroid","Hyperthymic","Anxious"}, // В
-		[]string{"Anxious","Epileptoid","Hyperthymic","Schizoid","Emotional","Paranoid","Hysteroid"}, // Г
-		[]string{"Epileptoid","Hyperthymic","Emotional","Anxious","Paranoid","Hysteroid","Schizoid"}, // Д
-		[]string{"Hyperthymic","Epileptoid","Schizoid","Anxious","Paranoid","Hysteroid","Emotional"}, // Е
-		[]string{"Epileptoid","Hysteroid","Emotional","Paranoid","Anxious","Schizoid","Hyperthymic"}, // Ж
-		[]string{"Paranoid","Anxious","Epileptoid","Schizoid","Hysteroid","Emotional","Hyperthymic"}, // З
-		[]string{"Hyperthymic","Epileptoid","Paranoid","Anxious","Emotional","Schizoid","Hysteroid"}, // И 
-		[]string{"Anxious","Hysteroid","Emotional","Epileptoid","Schizoid","Hyperthymic","Paranoid"}, // К
-		[]string{"Hysteroid","Epileptoid","Anxious","Hyperthymic","Schizoid","Paranoid","Emotional"}, // Л
-		[]string{"Schizoid","Epileptoid","Hysteroid","Anxious","Paranoid","Emotional","Hyperthymic"}, // М
-		[]string{"Epileptoid","Paranoid","Anxious","Hysteroid","Hyperthymic","Emotional","Schizoid"}, // Н
+	testAnsExplain := [][]string{
+		[]string{"Hysteroid", "Emotional", "Epileptoid", "Hyperthymic", "Paranoid", "Anxious", "Schizoid"}, // A
+		[]string{"Emotional", "Epileptoid", "Schizoid", "Hyperthymic", "Hysteroid", "Paranoid", "Anxious"}, // Б
+		[]string{"Paranoid", "Schizoid", "Emotional", "Epileptoid", "Hysteroid", "Hyperthymic", "Anxious"}, // В
+		[]string{"Anxious", "Epileptoid", "Hyperthymic", "Schizoid", "Emotional", "Paranoid", "Hysteroid"}, // Г
+		[]string{"Epileptoid", "Hyperthymic", "Emotional", "Anxious", "Paranoid", "Hysteroid", "Schizoid"}, // Д
+		[]string{"Hyperthymic", "Epileptoid", "Schizoid", "Anxious", "Paranoid", "Hysteroid", "Emotional"}, // Е
+		[]string{"Epileptoid", "Hysteroid", "Emotional", "Paranoid", "Anxious", "Schizoid", "Hyperthymic"}, // Ж
+		[]string{"Paranoid", "Anxious", "Epileptoid", "Schizoid", "Hysteroid", "Emotional", "Hyperthymic"}, // З
+		[]string{"Hyperthymic", "Epileptoid", "Paranoid", "Anxious", "Emotional", "Schizoid", "Hysteroid"}, // И
+		[]string{"Anxious", "Hysteroid", "Emotional", "Epileptoid", "Schizoid", "Hyperthymic", "Paranoid"}, // К
+		[]string{"Hysteroid", "Epileptoid", "Anxious", "Hyperthymic", "Schizoid", "Paranoid", "Emotional"}, // Л
+		[]string{"Schizoid", "Epileptoid", "Hysteroid", "Anxious", "Paranoid", "Emotional", "Hyperthymic"}, // М
+		[]string{"Epileptoid", "Paranoid", "Anxious", "Hysteroid", "Hyperthymic", "Emotional", "Schizoid"}, // Н
 	}
 
 	userAns, err := h.services.TQuestion.GetUserAnswers(jwt.GetUserIdFromContext(c))
@@ -56,7 +55,7 @@ func (h *Handler) getPonomarUserResult(c echo.Context) error {
 	}
 	var ansResult model.PonomarResult
 	for _, ans := range userAns {
-		switch testAnsExplain[ans.TestQuestionId - 1][ans.TestAnswerId - 1] {
+		switch testAnsExplain[ans.TestQuestionId-1][ans.TestAnswerId-1] {
 		case "Hysteroid":
 			ansResult.Hysteroid++
 		case "Epileptoid":
@@ -73,5 +72,14 @@ func (h *Handler) getPonomarUserResult(c echo.Context) error {
 			ansResult.Anxious++
 		}
 	}
+	kf := 100.0/13
+	ansResult.Anxious *= kf 
+	ansResult.Emotional *= kf 
+	ansResult.Epileptoid *= kf 
+	ansResult.Hyperthymic *= kf 
+	ansResult.Hysteroid *= kf 
+	ansResult.Paranoid *= kf 
+	ansResult.Schizoid *= kf 
+
 	return c.JSON(http.StatusOK, ansResult)
 }

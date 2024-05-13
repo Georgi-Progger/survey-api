@@ -25,12 +25,12 @@ type (
 		TestAnswerId int `json:"test_answer_id"`
 	}
 	PonomarResult struct {
-		Hysteroid int `json:"hysteroid"`
-		Epileptoid int `json:"epileptoid"`
-		Paranoid int `json:"paranoid"`
-		Emotional int `json:"emotional"`
-		Schizoid int `json:"schizoid"`
-		Hyperthymic int `json:"hyperthymic"`
-		Anxious int `json:"anxious"`
+		Hysteroid float64 `json:"hysteroid"`
+		Epileptoid float64 `json:"epileptoid"`
+		Paranoid float64 `json:"paranoid"`
+		Emotional float64 `json:"emotional"`
+		Schizoid float64 `json:"schizoid"`
+		Hyperthymic float64 `json:"hyperthymic"`
+		Anxious float64 `json:"anxious"`
 	}
 )
