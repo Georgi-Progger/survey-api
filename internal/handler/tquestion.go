@@ -3,6 +3,7 @@ package handler
 import (
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/Georgi-Progger/survey-api/internal/model"
 	"github.com/Georgi-Progger/survey-api/pkg/jwt"
@@ -33,6 +34,10 @@ func (h *Handler) insertTQuestionAnswers(c echo.Context) error {
 }
 
 func (h *Handler) getPonomarUserResult(c echo.Context) error {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid user id: " + err.Error()})
+	}
 	testAnsExplain := [][]string{
 		[]string{"Hysteroid", "Emotional", "Epileptoid", "Hyperthymic", "Paranoid", "Anxious", "Schizoid"}, // A
 		[]string{"Emotional", "Epileptoid", "Schizoid", "Hyperthymic", "Hysteroid", "Paranoid", "Anxious"}, // Б
@@ -49,7 +54,7 @@ func (h *Handler) getPonomarUserResult(c echo.Context) error {
 		[]string{"Epileptoid", "Paranoid", "Anxious", "Hysteroid", "Hyperthymic", "Emotional", "Schizoid"}, // Н
 	}
 
-	userAns, err := h.services.TQuestion.GetUserAnswers(jwt.GetUserIdFromContext(c))
+	userAns, err := h.services.TQuestion.GetUserAnswers(id)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"err": "Failed get user answers from db: " + err.Error()})
 	}

@@ -50,7 +50,7 @@ func (h *Handler) InitRoutes() *echo.Echo {
 	interviewGroup.Use(userAuthMiddleware)
 	interviewGroup.GET("/question", h.GetAllVQuestions)
 	interviewGroup.GET("/test", h.getAllTQuestions)
-	interviewGroup.GET("/result", h.getPonomarUserResult)
+	interviewGroup.GET("/result/:id", h.getPonomarUserResult)
 	interviewGroup.POST("/test", h.insertTQuestionAnswers)
 	interviewGroup.POST("/video", h.UploadFile)
 
