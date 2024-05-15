@@ -38,9 +38,9 @@ func (h *Handler) UploadFile(c echo.Context) error {
 	}
 	defer src.Close()
 	ext := strings.Split(file.Filename, ".")
-	fileName := uuid.New().String() + "." + ext[len(ext) - 1]
+	fileName := uuid.New().String() + "." + ext[len(ext)-1]
 	size := file.Size
-	log.Println(ext[len(ext) - 1])
+	log.Println(ext[len(ext)-1])
 	buffer := make([]byte, size)
 	_, err = src.Read(buffer)
 	if err != nil {
@@ -62,5 +62,5 @@ func (h *Handler) UploadFile(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"err": "Failed to save video in DB: " + err.Error()})
 	}
 
-	return c.JSON(http.StatusOK, map[string]string{"message": "File uploaded successfully: " + err.Error()})
+	return c.JSON(http.StatusOK, map[string]string{"message": "File uploaded successfully"})
 }

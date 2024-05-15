@@ -79,7 +79,10 @@ func (h *Handler) AuthUser(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid JSON: " + err.Error()})
 	}
 	dbUser, err := h.services.GetUserByPhonenumber(requestUser.Phonenumber)
-	if err != nil || !isEqualPassword(requestUser.Password, dbUser.Password) {
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Filed to get user from db: " + err.Error()})
+	}
+	if !isEqualPassword(requestUser.Password, dbUser.Password) {
 		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid credentials: " + err.Error()})
 	}
 	jwtStr, err := jwt.GenerateJWT(dbUser)
