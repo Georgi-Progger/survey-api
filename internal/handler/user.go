@@ -83,7 +83,7 @@ func (h *Handler) AuthUser(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Filed to get user from db: " + err.Error()})
 	}
 	if !isEqualPassword(requestUser.Password, dbUser.Password) {
-		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid credentials: " + err.Error()})
+		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid credentials"})
 	}
 	jwtStr, err := jwt.GenerateJWT(dbUser)
 	if err != nil {
