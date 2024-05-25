@@ -44,3 +44,5 @@ jobs:
           docker image prune -af
           docker pull georhugaev/survey-app:latest 
           docker run -d -p 8091:8091 --name survey-app georhugaev/survey-app:latest 
+
+
