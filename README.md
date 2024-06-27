@@ -5,8 +5,3 @@
 ## Getting started
 
 go run /../../main.go
-
-
-
-
-
